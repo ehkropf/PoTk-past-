@@ -126,7 +126,7 @@ methods(Access=protected)
             W.G0alpha = cell(n, 1);
             for k = find(Gammav')
                 walpha = skprime(alphav(k), W.wbeta);
-                walphac = conjParam(walpha);
+                walphac = invParam(walpha);
                 if m > 1
                     W.G0alpha{k} = @(z) log(...
                         walpha(z)./walphac(z)/abs(alphav(k)))/(2i*pi);
@@ -142,7 +142,7 @@ methods(Access=protected)
     function W = setupG0beta(W)
         if W.primeDomain.m > 0
             W.wbeta = skprime(W.beta, W.primeDomain);
-            W.wbetac = conjParam(W.wbeta);
+            W.wbetac = invParam(W.wbeta);
             if W.primeDomain.m == 1 && W.beta == 0
                 W.G0beta = @(z) log(W.wbeta(z))/(2i*pi);
             else
@@ -227,9 +227,9 @@ methods(Access=protected)
         if mod(Chi, pi) > eps(pi)
             % Sine term in use. Setup G0bx.
             wb1 = skprime(dbet(1), W.wbeta);
-            wb1c = conjParam(wb1);
+            wb1c = invParam(wb1);
             wb2 = skprime(dbet(2), W.wbeta);
-            wb2c = conjParam(wb2);
+            wb2c = invParam(wb2);
             W.G0bxy(:,1) = { ...
                 @(z) log(wb1(z)./wb1c(z)/abs(dbet(1)))/(2i*pi);
                 @(z) log(wb2(z)./wb2c(z)/abs(dbet(2)))/(2i*pi)
@@ -238,9 +238,9 @@ methods(Access=protected)
         if mod(Chi + pi/2, pi) > eps(pi)
             % Cosine term in use. Setup G0by.
             wb3 = skprime(dbet(3), W.wbeta);
-            wb3c = conjParam(wb3);
+            wb3c = invParam(wb3);
             wb4 = skprime(dbet(4), W.wbeta);
-            wb4c = conjParam(wb4);
+            wb4c = invParam(wb4);
             W.G0bxy(:,2) = { ...
                 @(z) log(wb3(z)./wb3c(z)/abs(dbet(3)))/(2i*pi);
                 @(z) log(wb4(z)./wb4c(z)/abs(dbet(4)))/(2i*pi)                
