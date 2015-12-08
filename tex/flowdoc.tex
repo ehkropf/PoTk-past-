@@ -1,0 +1,236 @@
+\documentclass[12pt,fleqn]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[]{graphicx}
+\usepackage[]{color}
+\usepackage{listings}
+\usepackage{fullpage}
+\usepackage[]{hyperref}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareMathOperator{\real}{Re}
+\DeclareMathOperator{\imag}{Im}
+\renewcommand{\i}{\mathrm{i}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{dkgreen}{rgb}{.068,.578,.068}
+\definecolor{dkpurple}{rgb}{.320,.064,.680}
+
+% Matlab style, stolen from Chebfun coding style guide.
+\lstset{
+  language=Matlab,
+  keywords={break,case,catch,continue,else,elseif,end,for,function,
+    global,if,otherwise,persistent,return,switch,try,while},
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\color{blue}\bfseries,
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{dkpurple},
+  backgroundcolor=\color{white},
+  frame=tlbr
+  tabsize=4,
+  showspaces=false,
+  showstringspaces=false
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\title{Potential theory with the Potential Theory Toolkit}
+\author{E.~Kropf}
+\date{\today}
+\maketitle
+
+\section{Introduction}
+This document presents some complex potential theory using the Potential Theory Toolkit (PoTk) for MATLAB.
+
+\subsection{Utility code}
+The following definitions will be used in the subsequent.
+\begin{lstlisting}
+aspectequal = @(ax) set(ax, 'dataaspectratio', [1, 1, 1]);
+streamColor = [0, 0.447, 0.741];
+vectorColor = [0.929, 0.694, 0.125];
+\end{lstlisting}
+
+\section{Basic potential flow}
+\subsection{Uniform flow}
+The vector components of uniform flow at speed $U$ in the plane at an angle $\chi$ with respect ot he real axis are given by
+\[ u = U\cos\chi \quad\text{and}\quad v = U\sin \chi, \]
+from which we get
+\begin{equation*}
+  \frac{dW_U}{dz} = u - \i v = Ue^{-\i\chi}
+\end{equation*}
+so that the complex potential for the unform flow, up to a constant, is
+\begin{equation*}
+  W_U(z) = Uze^{-\i\chi}.
+\end{equation*}
+Computing this in a rectangle is given by
+\begin{lstlisting}
+U = 1;
+chi = pi/4;
+
+xylim = [-1, 1, -1, 1];
+% Grid for streamlines.
+z = rectgridz(xylim, 200);
+% Grid for vector arrows.
+zv = rectgridz(xylim, 20, 0.01);
+
+Wz = U*exp(-1i*chi)*z;
+vzv = 1i*U*exp(-1i*chi)*ones(size(zv));
+
+quiver(real(zv), imag(zv), real(vzv), imag(vzv), 'color', vectorColor)
+hold on
+contour(real(z), imag(z), imag(Wz), 20, 'lineColor', streamColor)
+\end{lstlisting}
+and the result is shown in Figure~\ref{fig:simpleuniform}.
+\begin{figure}[htb]
+  \centering
+  \includegraphics[height=.4\textheight]{figures/simpleuniform.eps}
+  \caption{Uniform background flow at angle $\pi/4$.}
+  \label{fig:simpleuniform}
+\end{figure}
+
+\subsubsection{Flow past one object}
+Uniform flow past a circle is given by the Milne-Thompson circle theorem via
+\begin{equation*}
+  W(z) = U\left( z + \frac{1}{z} \right).
+\end{equation*}
+We may easily compute this via
+\begin{lstlisting}
+U = 1;
+Wu = @(z, U) U*(z + 1./z);
+dWdz = centdiffz(@(z) Wu(z, U));
+
+xylim = 2.5*xylim;
+z = rectgridz(xylim, 200);
+outer = abs(z) > 1;
+zv = rectgridz(xylim, 20, 0.01);
+outv = abs(zv) > 1;
+
+Wz = complex(nan(size(z)));
+Wz(outer) = Wu(z(outer), U);
+vzv = complex(nan(size(zv)));
+vzv(outv) = dWdz(zv(outv));
+
+quiver(real(zv), imag(zv), real(vzv), imag(vzv), 'color', vectorColor)
+hold on
+contour(real(z), imag(z), imag(Wz), 20, 'lineColor', streamColor)
+\end{lstlisting}
+\begin{figure}[htb]
+  \centering
+  \includegraphics[height=.4\textheight]{figures/aroundone}
+  \caption{Simple flow around one obstacle.}
+  \label{fig:aroundone}
+\end{figure}
+
+This flow may be modified by a line vortex via
+\begin{equation*}
+  W(z) = U\left( z + \frac{1}{z} \right) + \frac{\Gamma}{2\pi\i}\log z
+\end{equation*}
+since the effect is to maintain the boundary of the unit circle as a streamline.
+Computing this we see
+\begin{lstlisting}
+Gamma = -3;
+Wc = @(z, Gamma) Gamma/(2i*pi)*log(z);
+W = @(z, U, Gamma) Wu(z, U) + Wc(z, Gamma);
+dWdz = centdiffz(@(z) W(z, U, Gamma));
+
+Wz(outer) = W(z(outer), U, Gamma);
+vzv(outv) = dWdz(zv(outv));
+
+quiver(real(zv), imag(zv), real(vzv), imag(vzv), 'color', vectorColor)
+hold on
+contour(real(z), imag(z), imag(Wz), 20, 'lineColor', streamColor)
+fill(circle(0, 1))
+plot(circle(0, 1))
+\end{lstlisting}
+Is it possible to compute the stagnation points?
+
+We can force, by a specific value of $\Gamma$, to have the stagnation point at the bottom of the unit disk, $e^{\i 3\pi/2}$:
+\begin{lstlisting}
+Gamma = -4*pi;
+dWdz = centdiffz(@(z) W(z, U, Gamma));
+
+Wz(outer) = W(z(outer), U, Gamma);
+vzv(outv) = dWdz(zv(outv));
+\end{lstlisting}
+
+If we further increase the circulation $\Gamma$, then the stagnation point moves off the circle:
+\begin{lstlisting}
+Gamma = -5*pi;
+dWdz = centdiffz(@(z) W(z, U, Gamma));
+
+xylim = [-2.5, 2.5, -3.5, 1.5];
+z = rectgridz(xylim, 200);
+outer = abs(z) > 1;
+zv = rectgridz(xylim, 20, 0.01);
+outvec = abs(zv) > 1;
+
+Wz = complex(nan(size(z)));
+Wz(outer) = W(z(outer), U, Gamma);
+vzv = complex(nan(size(zv)));
+vzv(outvec) = dWdz(zv(outvec));
+\end{lstlisting}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.46\textwidth]{figures/onecirculate}
+  \hspace{.02\textwidth}
+  \includegraphics[width=.46\textwidth]{figures/circlebottom}
+  \\\vspace*{.02\textwidth}
+  \includegraphics[width=.46\textwidth]{figures/offcircle}
+  \caption{Uniform flow past a cylinder with various circulations. Clockwise, from top-left, $\Gamma=-3$, $\Gamma=-4\pi$, and $\Gamma=-5\pi$.}
+  \label{fig:onecirculate}
+\end{figure}
+
+%%fakesection Appendix
+\clearpage
+\appendix
+
+\section{Utility functions}
+\paragraph{Rectangular grid}
+This function returns points in a rectangular grid.
+\begin{lstlisting}
+function z = rectgridz(xylim, res, pad)
+%rectgridz contructs rectangular complex grid.
+
+if nargin < 2
+    res = 200;
+end
+if numel(res) == 1
+    resx = res;
+    resy = res;
+else
+    resx = res(1);
+    resy = res(2);
+end
+
+if nargin < 3
+    pad = 0;
+end
+if pad ~= 0
+    padx = pad*diff(xylim(1:2));
+    pady = pad*diff(xylim(3:4));
+    xylim = [xylim(1) + padx, xylim(2) - padx, ...
+        xylim(3) + pady, xylim(4) - pady];
+end
+
+[x, y] = meshgrid(linspace(xylim(1), xylim(2), resx), ...
+    linspace(xylim(3), xylim(4), resy));
+z = complex(x, y);
+\end{lstlisting}
+
+\paragraph{Centered difference}
+A very simple centered difference function.
+\begin{lstlisting}
+function dw = centdiffz(f, h)
+%centdiffz is the central difference formula for f(z).
+
+if nargin < 2
+    h = 1e-8;
+end
+
+dh = 0.5*h;
+dw = @(z) (imag(f(z + 1i*dh) - f(z - 1i*dh)) ...
+    - 1i*imag(f(z + dh) - f(z - dh)))/h;
+\end{lstlisting}
+
+\end{document}
