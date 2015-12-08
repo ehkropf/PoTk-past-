@@ -89,7 +89,7 @@ G0 = @(z, gamma, wt, wb) log(wt(z)./wb(z)/abs(gamma))/(2i*pi);
 % function at the test points.
 
 omeg1 = skprime(alph1, D1);
-omeg1o = setAlpha(omeg1, 1/conj(alph1));
+omeg1o = invParam(omeg1);
 wz1 = G0(z1test, alph1, omeg1, omeg1o);
 
 
@@ -138,7 +138,7 @@ hold off
 % function.
 
 omeg2 = skprime(alph2, D2);
-omeg2o = setAlpha(omeg2, 1/conj(alph2));
+omeg2o = invParam(omeg2);
 wz2 = G0(z2test, alph2, omeg2, omeg2o);
 
 
