@@ -12,7 +12,7 @@
 % known as the stream function. By definition the flow velocity field is the
 % gradient of this potential function, and in complex variables we can
 % apply the Cauchy-Riemann equations, given \(\zeta = x + iy\), to write 
-% \[ V(\zeta) = u(\zeta) + iv(\zeta) := \varphi_x + i\varphi_y = 
+% \[ V(\zeta) = u(\zeta) - iv(\zeta) := \varphi_x + i\varphi_y = 
 % \psi_y - i\psi_x. \]
 %
 % The potential computation can be split into two parts expressed by the
@@ -28,7 +28,7 @@
 %
 % In the case there are no obstacles in the domain, these flows are given
 % by
-% \[ W_U(\zeta) = -iU\zeta e^{-i\chi} \]
+% \[ W_U(\zeta) = U\zeta e^{-i\chi} \]
 % and
 % \[ W_\Gamma(\zeta) = \sum_{k=1}^n \frac{\Gamma_k}{2\pi i} \log(\zeta -
 % \alpha_k). \]
