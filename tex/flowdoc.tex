@@ -9,13 +9,15 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \DeclareMathOperator{\real}{Re}
 \DeclareMathOperator{\imag}{Im}
+\newcommand{\conj}[1]{\overline{#1}}
+\newcommand{\uconj}[1]{1/\conj{#1}}
 \renewcommand{\i}{\mathrm{i}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{gray}{rgb}{.5,.5,.5}
 \definecolor{dkgreen}{rgb}{.068,.578,.068}
 \definecolor{dkpurple}{rgb}{.320,.064,.680}
+\definecolor{magenta}{rgb}{.619,.109,.302}
 
-% Matlab style, stolen from Chebfun coding style guide.
 \lstset{
   language=Matlab,
   keywords={break,case,catch,continue,else,elseif,end,for,function,
@@ -25,10 +27,12 @@
   commentstyle=\color{dkgreen},
   stringstyle=\color{dkpurple},
   backgroundcolor=\color{white},
-  frame=tlbr
-  tabsize=4,
-  showspaces=false,
-  showstringspaces=false
+  frame=single,
+  frameround=tttt,
+  morekeywords=[2]{circle},
+  keywordstyle=[2]\color{magenta}\bfseries,
+  xleftmargin=.02\textwidth,
+  xrightmargin=.02\textwidth
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -180,6 +184,66 @@ vzv(outvec) = dWdz(zv(outvec));
   \caption{Uniform flow past a cylinder with various circulations. Clockwise, from top-left, $\Gamma=-3$, $\Gamma=-4\pi$, and $\Gamma=-5\pi$.}
   \label{fig:onecirculate}
 \end{figure}
+
+\clearpage
+
+\section{Multiply connected domains}
+There are actually two cases to consider. The bounded domain and the unbounded domain. We first consider the former.
+
+Let $D_\zeta$ be the unit disk with $m$ disconnected circular holes. We let the pairs $\{\delta_j,q_j\}_{j=1}^m$ represent the centres and radii of these holes. For indices $j=\{0,1,\dots,m\}$ we denote the $j$th boundary circle of $\partial D_\zeta$ by $C_j$, where $C_0$ is the unit circle.
+
+If $C_j$ is the $j$th circle boundary inside $D_\zeta$, then let $C_j'$ be its reflection through the unit circle. It can be shown the M\"obius transformation
+\begin{equation*}
+  \theta_j(\zeta) = \delta_j + \frac{q_j^2 \zeta}{1 - \conj{\delta_j}\zeta}
+\end{equation*}
+maps points on the outer circle $C_j'$ to points on the inner circle $C_j$.
+Let this sentence stand in as the definition of the first kind integrals $v_j(\zeta)$.
+For more on this and information on computing the Schottky-Klein prime function $\omega$, see \cite{primecalc}.
+
+From \cite{greensfunctions} we note the $m+1$ functions, for $\alpha$ and $\zeta$ in $D_\zeta$,
+\begin{equation}
+  G_j(\zeta,\alpha) = \frac{1}{2\pi\i} \log \left[ \frac{q_j}{|\alpha - \delta_j|} \frac{\omega(\zeta,\alpha)}{\omega(\zeta,\uconj{\alpha})} \right]
+  \label{eq:greensfunction}
+\end{equation}
+have the following properties: The function $G_j$ is the complex potentential such that
+\begin{enumerate}
+  \item there exists a point vortex of strength 1 at $\alpha$, and
+  \item the boundary $C_j$ has a circulation of strength 1.
+\end{enumerate}
+In the special case when $j=0$ and $\alpha=0$ we note the Green's function takes the form
+\begin{equation*}
+  G_0(\zeta,0) = \frac{1}{2\pi\i} \log\left[ \frac{\omega(\zeta,0)}{\omega(\zeta,\infty)} \right].
+\end{equation*}
+It will be beneficial in the subsequent to note we never need to compute $G_j$ directly, since by a lemma in \cite{primecalc} we have
+\begin{equation*}
+  G_j(\zeta,\alpha) = G_0(\zeta,\alpha) - v_j(\zeta) + K_j(\alpha)
+\end{equation*}
+where
+\begin{equation*}
+  K_j(\alpha) = \conj{v_j(\alpha)} + \tfrac{1}{2}\tau_{jj} + \frac{1}{2\pi}\arg\left[ \frac{\alpha}{\alpha - \delta_j} \right]
+\end{equation*}
+is a constant dependent solely on $\alpha$. Since complex potential is determined up to a constant, we ignore it in computation. We also note that due to the logarithmic singularities in the formulation of $G_0$ and $v_j$, it is better computationally to use the form
+\begin{equation*}
+  G_j(\zeta,\alpha) = \frac{1}{2\pi\i} \log\left[ \frac{\omega(\zeta,\alpha)}{|\alpha|\omega(\zeta,\alpha)} e^{-2\pi\i v_j(\zeta)} \right],
+\end{equation*}
+which avoids numerical complications with branch cuts.
+
+Let $\Omega$ be an $m+1$ connected unbounded domain where all of the component boundaries are circles. Then there is a M\"obius transformation $\zeta(z)$ with the mapping $\Omega\mapsto D_\zeta$. We denote the $j$th circle of $\partial\Omega$ by $R_j$, and the map $\zeta(z)$ associates $R_j$ with $C_j$. Let the points $\{\alpha_k\}_{k=1}^n$ be images under $\zeta$ of the $n$ point vortices of strength $\Gamma_k$ located in $\Omega$, and we will allow for circulation around the boundaries of $\Omega$ with strengths given by $\{\gamma_j\}_{j=0}^m$. And finally, define the point $\beta = \zeta(\infty)$. Following \cite{newcalculus}, we may now write down that background flow is given by
+\begin{equation}
+  W_U(\zeta) = -4\pi U\left. \left( \frac{\partial G_0(\zeta,\alpha)}{\partial \alpha_y}\cos\chi + \frac{\partial G_0(\zeta,\alpha)}{\partial \alpha_x}\sin\chi \right) \right|_{\alpha = \beta}
+  \label{eq:backgroudmc}
+\end{equation}
+where we have used that $\alpha = \alpha_x + \i\alpha_y$. Also from \cite{newcalculus}, we may write down the flow due to $n$ point vortices being determined by
+\begin{equation}
+  W_\Gamma(\zeta) = \sum_{k=1}^n \Gamma_k \left[ G_0(\zeta,\alpha_k) - G_0(\zeta,\beta) \right] - \sum_{j=0}^m \gamma_j G_j(\zeta,\beta).
+  \label{eq:vorticesmc}
+\end{equation}
+The combined flow is written as above by simply $W(\zeta) = W_U(\zeta) + W_\Gamma(\zeta)$.
+
+
+%%fakesection References
+\bibliographystyle{abbrv}
+\bibliography{flowref}
 
 %%fakesection Appendix
 \clearpage

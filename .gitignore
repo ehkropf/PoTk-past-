@@ -6,6 +6,8 @@
 
 # latex output files
 *.aux
+*.bbl
+*.blg
 *.log
 *.out
 *.pdf
