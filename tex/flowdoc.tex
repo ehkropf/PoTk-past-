@@ -188,10 +188,11 @@ vzv(outvec) = dWdz(zv(outvec));
 \clearpage
 
 \section{Multiply connected domains}
-There are actually two cases to consider. The bounded domain and the unbounded domain. We first consider the former.
-
 Let $D_\zeta$ be the unit disk with $m$ disconnected circular holes. We let the pairs $\{\delta_j,q_j\}_{j=1}^m$ represent the centres and radii of these holes. For indices $j=\{0,1,\dots,m\}$ we denote the $j$th boundary circle of $\partial D_\zeta$ by $C_j$, where $C_0$ is the unit circle.
 
+There are actually two cases to consider. The bounded domain and the unbounded domain. We first consider the former.
+
+\subsection{Unbounded flow region}
 If $C_j$ is the $j$th circle boundary inside $D_\zeta$, then let $C_j'$ be its reflection through the unit circle. It can be shown the M\"obius transformation
 \begin{equation*}
   \theta_j(\zeta) = \delta_j + \frac{q_j^2 \zeta}{1 - \conj{\delta_j}\zeta}
@@ -240,6 +241,18 @@ where we have used that $\alpha = \alpha_x + \i\alpha_y$. Also from \cite{newcal
 \end{equation}
 The combined flow is written as above by simply $W(\zeta) = W_U(\zeta) + W_\Gamma(\zeta)$.
 
+\subsection{Bounded flow region}
+``Background'' flow in the bounded domain is represented by a point dipole $\beta\in D_\zeta$ acting as a source and sink. In fact if $D_\zeta$ is the image of some domain $\Omega$ under $\zeta(\zeta)$, then $\beta$ is the image of the point at infinity, and this point takes on the same role.
+
+In equation~\eqref{eq:vorticesmc}, it should be clear that all of the unwanted boundary circulation on $R_0$ (and by association $C_0$), given by the $G_0(\zeta,\alpha_k)$ functions, was moved to the point at infinity by the term $-G_0(\zeta,\beta)$. In the bounded flow case, we could choose to have the point $\beta$ take this same role, but by convention we move all of the unwanted boundary circulation to the boundary $C_0$. This is done by writing
+\begin{equation}
+  \begin{split}
+    W_\Gamma(\zeta) &= \sum_{k=1}^n \Gamma_k G_0(\zeta,\alpha_k) + \sum_{j=1}^m \gamma_j \left[ G_0(\zeta,\beta) - G_j(\zeta,\beta) \right] \\
+    &= \sum_{k=1}^n \Gamma_k G_0(\zeta,\alpha_k) + \sum_{j=1}^m \gamma_j v_j(\zeta)
+  \end{split}
+  \label{eq:bvorticesmc}
+\end{equation}
+where the second equality follows from above.
 
 %%fakesection References
 \bibliographystyle{abbrv}
