@@ -160,8 +160,6 @@ methods(Access=protected)
         gammav = W.inputDomain.islandCirculation;
         betap = W.beta;
         D = W.primeDomain;
-        dv = D.centers(2:end);
-        qv = D.radii(2:end);
         m = D.m - 1;
         
         if m > 1 && any(gammav ~= 0)
@@ -172,12 +170,8 @@ methods(Access=protected)
                     continue
                 end
                 vj = vjv{j};
-                zj = dv(j) + qv(j);
-                Hj = @(z) -exp(2i*pi ...
-                    *(vj(betap) - vj(z) + 0.5*(vj(zj) - vj(1/conj(zj))))) ...
-                    /(qv(j)/(1 - conj(dv(j)/betap)));
-                W.Gjbeta{j} = @(z) log(...
-                    W.wbeta(z)./W.wbetac(z)/abs(betap).*Hj(z))/(2i*pi);
+                W.Gjbeta{j} = @(z) ...
+                    log(W.wbeta(z)./W.wbetac(z)/abs(betap))/(2i*pi) - vj(z);
             end
         end
     end
