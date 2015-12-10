@@ -223,11 +223,7 @@ where
 \begin{equation*}
   K_j(\alpha) = \conj{v_j(\alpha)} + \tfrac{1}{2}\tau_{jj} + \frac{1}{2\pi}\arg\left[ \frac{\alpha}{\alpha - \delta_j} \right]
 \end{equation*}
-is a constant dependent solely on $\alpha$. Since complex potential is determined up to a constant, we ignore it in computation. We also note that due to the logarithmic singularities in the formulation of $G_0$ and $v_j$, it is better computationally to use the form
-\begin{equation*}
-  G_j(\zeta,\alpha) = \frac{1}{2\pi\i} \log\left[ \frac{\omega(\zeta,\alpha)}{|\alpha|\omega(\zeta,\alpha)} e^{-2\pi\i v_j(\zeta)} \right],
-\end{equation*}
-which avoids numerical complications with branch cuts.
+is a constant dependent solely on $\alpha$. Since complex potential is determined up to a constant, we ignore it in computation.
 
 Let $\Omega$ be an $m+1$ connected unbounded domain where all of the component boundaries are circles. Then there is a M\"obius transformation $\zeta(z)$ with the mapping $\Omega\mapsto D_\zeta$. We denote the $j$th circle of $\partial\Omega$ by $R_j$, and the map $\zeta(z)$ associates $R_j$ with $C_j$. Let the points $\{\alpha_k\}_{k=1}^n$ be images under $\zeta$ of the $n$ point vortices of strength $\Gamma_k$ located in $\Omega$, and we will allow for circulation around the boundaries of $\Omega$ with strengths given by $\{\gamma_j\}_{j=0}^m$. And finally, define the point $\beta = \zeta(\infty)$. Following \cite{newcalculus}, we may now write down that background flow is given by
 \begin{equation}
@@ -236,7 +232,10 @@ Let $\Omega$ be an $m+1$ connected unbounded domain where all of the component b
 \end{equation}
 where we have used that $\alpha = \alpha_x + \i\alpha_y$. Also from \cite{newcalculus}, we may write down the flow due to $n$ point vortices being determined by
 \begin{equation}
-  W_\Gamma(\zeta) = \sum_{k=1}^n \Gamma_k \left[ G_0(\zeta,\alpha_k) - G_0(\zeta,\beta) \right] - \sum_{j=0}^m \gamma_j G_j(\zeta,\beta).
+  \begin{split}
+    W_\Gamma(\zeta) &= \sum_{k=1}^n \Gamma_k \left[ G_0(\zeta,\alpha_k) - G_0(\zeta,\beta) \right] - \sum_{j=0}^m \gamma_j G_j(\zeta,\beta) \\
+    &= \sum_{k=1}^n \Gamma_k G_0(\zeta,\alpha_k) - \left[ \sum_{k=1}^n \Gamma_k + \sum_{j=0}^m \gamma_j \right] G_0(\zeta,\beta) + \sum_{j=1}^m \gamma_j v_j(\zeta).
+  \end{split}
   \label{eq:vorticesmc}
 \end{equation}
 The combined flow is written as above by simply $W(\zeta) = W_U(\zeta) + W_\Gamma(\zeta)$.
@@ -246,13 +245,9 @@ The combined flow is written as above by simply $W(\zeta) = W_U(\zeta) + W_\Gamm
 
 In equation~\eqref{eq:vorticesmc}, it should be clear that all of the unwanted boundary circulation on $R_0$ (and by association $C_0$), given by the $G_0(\zeta,\alpha_k)$ functions, was moved to the point at infinity by the term $-G_0(\zeta,\beta)$. In the bounded flow case, we could choose to have the point $\beta$ take this same role, but by convention we move all of the unwanted boundary circulation to the boundary $C_0$. This is done by writing
 \begin{equation}
-  \begin{split}
-    W_\Gamma(\zeta) &= \sum_{k=1}^n \Gamma_k G_0(\zeta,\alpha_k) + \sum_{j=1}^m \gamma_j \left[ G_0(\zeta,\beta) - G_j(\zeta,\beta) \right] \\
-    &= \sum_{k=1}^n \Gamma_k G_0(\zeta,\alpha_k) + \sum_{j=1}^m \gamma_j v_j(\zeta)
-  \end{split}
+  W_\Gamma(\zeta) = \sum_{k=1}^n \Gamma_k G_0(\zeta,\alpha_k) + \sum_{j=1}^m \gamma_j \left[ G_0(\zeta,\beta) - G_j(\zeta,\beta) \right].
   \label{eq:bvorticesmc}
 \end{equation}
-where the second equality follows from above.
 
 %%fakesection References
 \bibliographystyle{abbrv}
