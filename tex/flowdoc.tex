@@ -245,7 +245,10 @@ The combined flow is written as above by simply $W(\zeta) = W_U(\zeta) + W_\Gamm
 
 In equation~\eqref{eq:vorticesmc}, it should be clear that all of the unwanted boundary circulation on $R_0$ (and by association $C_0$), given by the $G_0(\zeta,\alpha_k)$ functions, was moved to the point at infinity by the term $-G_0(\zeta,\beta)$. In the bounded flow case, we could choose to have the point $\beta$ take this same role, but by convention we move all of the unwanted boundary circulation to the boundary $C_0$. This is done by writing
 \begin{equation}
-  W_\Gamma(\zeta) = \sum_{k=1}^n \Gamma_k G_0(\zeta,\alpha_k) + \sum_{j=1}^m \gamma_j \left[ G_0(\zeta,\beta) - G_j(\zeta,\beta) \right].
+  \begin{split}
+    W_\Gamma(\zeta) &= \sum_{k=1}^n \Gamma_k G_0(\zeta,\alpha_k) + \sum_{j=1}^m \gamma_j \left[ G_0(\zeta,\beta) - G_j(\zeta,\beta) \right] \\
+    &= \sum_{k=1}^n \Gamma_k G_0(\zeta,\alpha_k) + \sum_{j=1}^m \gamma_j v_j(\zeta).
+  \end{split}
   \label{eq:bvorticesmc}
 \end{equation}
 
