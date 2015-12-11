@@ -55,6 +55,9 @@ methods
         %
         %   w = the calculated potential value at z.
         
+        % Will change away from boundary + circulation. Uniform flow is
+        % still separate.
+        
         nnL = ~isnan(z);
         zeta = W.zetaFun(z(nnL));
         wt = zeros(size(zeta));

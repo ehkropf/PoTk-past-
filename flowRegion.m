@@ -32,6 +32,7 @@ properties
     vortexCirculation           % Vortex circulation strength vector.
     uniformStrength = 0         % Unform background flow strength.
     uniformAngle = 0            % Unform flow angle.
+    dipole = complex(inf)       % Uniform flow dipole location.
 end
 
 properties(Dependent)

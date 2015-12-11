@@ -1,5 +1,5 @@
 classdef potentialExt < complexPotential
-%POTENTIAL represents the complex potential function.
+%potentialExt represents the complex potential function.
 %
 % W = potentialExt(aDomain)
 %   aDomain = flowRegion object.
