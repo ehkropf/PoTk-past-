@@ -5,30 +5,57 @@ classdef potentialBdd < complexPotential
 
 properties(SetAccess=protected)
     beta                    % Dipole for uniform flow.
+    g0funs = {}             % Vortex functions.
+    vjfuns = {}             % First kind integrals.
 end
 
 methods
     function W = potentialBdd(theDomain, varargin)
+        W = W@complexPotential(varargin{:});
         if ~nargin
             return
         end
-        W = W@complexPotential(varargin{:});
         
         if ~isa(theDomain, 'flowRegion')
             error('PoTk:InvalidArgument', 'Expected a flowRegion object.')
         end
-        W.primeDomain = theDomain;
+        W.theDomain = theDomain;
         
         W = constructPotential(W);
     end
 end
 
 methods(Access=protected)
-    % Computation needs only G_0 at the vortices and v_j for boundary
-    % circulation. No need for intermediate "beta" point to "transfer"
-    % circulation.
+    function W = setupCirculation(W)
+        % Construct the first kind integrals for boundary circulation
+        % computation.
+        % Construct them all regardless; then use to construct prime
+        % functions.
+        
+        m = W.theDomain.m;
+        D = W.theDomain.islands;
+        
+        W.vjfuns{1} = vjFirstKind(1, D);
+        for j = 2:m
+            W.vjfuns{j} = vjFirstKind(j, W.vjfuns{1});
+        end
+    end
     
-    % Then setup only needs to construct G_0 and get the v_j.
+    function W = setupVortices(W)
+        % Construct Green's functions for vortices.
+        % Extra boundary circulation goes to C0.
+        
+        alphav = W.theDomain.vortexLocation;
+        Gammav = W.theDomain.vortexCirculation;
+        n = numel(alphav);
+        if n == 0
+            return
+        end
+        
+        for k = find(Gammav')
+            W.g0funs{k} = greensC0(alphav(k), W.vjfuns{1});
+        end
+    end
 end
 
 end % classdef
