@@ -394,14 +394,7 @@ methods(Access=protected)
     end
     
     %%%%% Abstract protected methods.
-    w = calcBoundaryCirc(W, zeta)
-    w = calcVortexCirc(W, zeta)
-    w = calcUniform(W, zeta)
-    W = setupG0alpha(W)
-    W = setupG0beta(W)
-    W = setupGjFuns(W)
-    W = setupPrimeDomain(W)
-    W = setupUniform(W)
+    w = calcPotential(W, zeta)
 end
 
 methods(Access=protected,Static)
