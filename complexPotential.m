@@ -9,8 +9,7 @@ properties
 end
 
 properties(SetAccess=protected)
-    inputDomain             % (r/o) Physical domain.
-    primeDomain             % (r/o) Domain for prime function.
+    theDomain               % (r/o) basic domain.
 end
 
 properties(Abstract,Access=protected)
@@ -36,7 +35,7 @@ methods
         cname = class(W);
         fprintf(['  <a href="matlab:helpPopup %s">%s</a> ' ...
             'object with properties:\n'], cname, cname)
-        fprintf('\n   input domain has %d boundary components\n', W.inputDomain.m)
+        fprintf('\n   input domain has %d boundary components\n', W.theDomain.m)
 %         fprintf('   number of stored prime functions: %d\n', ...
 %             numel(W.SKav) + numel(W.SKbv) + numel(W.SKbxy))
         fprintf('   show wait bar while computing: %s\n', ...
@@ -63,7 +62,7 @@ methods
         wt = zeros(size(zeta));
         
         if W.useWaitBar
-            if W.inputDomain.uniformStrength ~= 0
+            if W.theDomain.uniformStrength ~= 0
                 wbprog = [1/4, 1/2, 3/4];
             else
                 wbprog = [1/3, 2/3, 1];
@@ -75,7 +74,7 @@ methods
             wbh = waitbar(wbprog(1), msg, ...
                 'name', 'Evaluating potential function.');
         end
-        if W.inputDomain.m > 0
+        if W.theDomain.m > 0
             wt = wt + calcBoundaryCirc(W, zeta);
         end
         if W.useWaitBar
@@ -85,7 +84,7 @@ methods
         end
         wt = wt + calcVortexCirc(W, zeta);
         
-        if W.inputDomain.uniformStrength ~= 0
+        if W.theDomain.uniformStrength ~= 0
             if W.useWaitBar
                 msg = sprintf(...
                     'Calculating uniform flow at %d points', npts);
@@ -161,7 +160,7 @@ methods
             cah = newplot;
             axis off
             cmtplot.whitefigure(cah)
-            axlim = plotbox(W.inputDomain, 1.5);
+            axlim = plotbox(W.theDomain, 1.5);
             hold on
         else
             axlim = axis;
@@ -169,7 +168,7 @@ methods
         axscale = max(diff(axlim(1:2)), diff(axlim(3:4)));
         
         % Calculate.        
-        zs = flowSamplePoints(W.inputDomain, ...
+        zs = flowSamplePoints(W.theDomain, ...
             W.numPlotPts, axlim, 0.005*axscale);
         Wz = feval(W, zs);
         
@@ -181,10 +180,10 @@ methods
 
         % Draw.
         hold on        
-        plot(W.inputDomain)
+        plot(W.theDomain)
         
         if ~washold
-            numberIslandsAndVortices(W.inputDomain)
+            numberIslandsAndVortices(W.theDomain)
             axis(axlim)
             aspectequal
             hold off
@@ -203,7 +202,7 @@ methods
         washold = ishold;
         if ~washold
             cmtplot.whitefigure(cah)
-            axlim = plotbox(W.inputDomain, 1.5);
+            axlim = plotbox(W.theDomain, 1.5);
             axis(axlim)
         else
             axlim = axis;
@@ -213,7 +212,7 @@ methods
         ypad = 0.01*diff(axlim([3,4]));
         vlim = [axlim(1)+xpad, axlim(2)-xpad, axlim(3)+ypad, axlim(4)-ypad];
         vscale = max(diff(vlim(1:2)), diff(vlim(3:4)));
-        zs = flowSamplePoints(W.inputDomain, W.numVectorPts, ...
+        zs = flowSamplePoints(W.theDomain, W.numVectorPts, ...
             vlim, 0.03*vscale);
         zs = zs(~isnan(zs));
         V = velocityField(W, zs);
@@ -227,13 +226,13 @@ methods
         if W.streamWithField && doStreamLines
             plot(W)
         else
-            plot(W.inputDomain)
+            plot(W.theDomain)
         end
         quiver(real(zs), imag(zs), real(V), imag(V), ...
             'color', [0.078, 0.169, 0.549], varargin{:})
         
         if ~washold
-            numberIslandsAndVortices(W.inputDomain)
+            numberIslandsAndVortices(W.theDomain)
             aspectequal
             axis off
             hold off
@@ -315,10 +314,10 @@ methods(Hidden)
 
         if ns ~= numPts
             % Basic sample grid.
-            zs = flowSamplePoints(W.inputDomain, ns, xyLim);
+            zs = flowSamplePoints(W.theDomain, ns, xyLim);
         
             % Finer grid around vortices.
-            vortices = W.inputDomain.vortexLocation;
+            vortices = W.theDomain.vortexLocation;
             n = numel(vortices);
             if n > 1
                 np = 16;
@@ -339,12 +338,12 @@ methods(Hidden)
         
             S = scatteredInterpolant(...
                 real(zz(L)), imag(zz(L)), w(L), 'natural');
-            z = flowSamplePoints(W.inputDomain, numPts, xyLim, 0.05);
+            z = flowSamplePoints(W.theDomain, numPts, xyLim, 0.05);
             L = ~isnan(z);
             w = complex(nan(size(z)));
             w(L) = S(real(z(L)), imag(z(L)));
         else
-            z = flowSamplePoints(W.inputDomain, numPts, xyLim, 0);
+            z = flowSamplePoints(W.theDomain, numPts, xyLim, 0);
             w = complex(nan(size(z)));
             L = ~isnan(z);
             w(L) = feval(W, z(L));
@@ -366,7 +365,7 @@ methods(Hidden)
         
         % Basic grid plane.
         xyscale = max(diff(xyLim(1:2)), diff(xyLim(3:4)));
-        z = flowSamplePoints(W.inputDomain, ns, xyLim, 0.03*xyscale);
+        z = flowSamplePoints(W.theDomain, ns, xyLim, 0.03*xyscale);
                 
         % Compute.
         z = z(~isnan(z));
