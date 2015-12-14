@@ -376,6 +376,9 @@ end
 
 methods(Access=protected)
     function cpot = complexPotential(varargin)
+        % Provide name/value pair processing for properties
+        %   useWaitBar
+        %   streamWithField
         if ~nargin
             return
         end
