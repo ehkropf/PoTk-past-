@@ -46,61 +46,9 @@ methods
     end
     
     function w = feval(W, z)
-        % Evaluate the potential at given points.
-        %
-        % w = feval(W, z)
-        %   W = potential object.
-        %   z = locations at which to evaluate the potential.
-        %
-        %   w = the calculated potential value at z.
+        % Provide feval capability.
         
-        % Will change away from boundary + circulation. Uniform flow is
-        % still separate.
-        
-        nnL = ~isnan(z);
-        zeta = W.zetaFun(z(nnL));
-        wt = zeros(size(zeta));
-        
-        if W.useWaitBar
-            if W.theDomain.uniformStrength ~= 0
-                wbprog = [1/4, 1/2, 3/4];
-            else
-                wbprog = [1/3, 2/3, 1];
-            end
-            npts = sum(nnL(:));
-            msg = sprintf(...
-                'Calculating boundary circulation at %d points.', npts);
-                
-            wbh = waitbar(wbprog(1), msg, ...
-                'name', 'Evaluating potential function.');
-        end
-        if W.theDomain.m > 0
-            wt = wt + calcBoundaryCirc(W, zeta);
-        end
-        if W.useWaitBar
-            msg = sprintf(...
-                'Calculating vortex circulation at %d points', npts);
-            waitbar(wbprog(2), wbh, msg)
-        end
-        wt = wt + calcVortexCirc(W, zeta);
-        
-        if W.theDomain.uniformStrength ~= 0
-            if W.useWaitBar
-                msg = sprintf(...
-                    'Calculating uniform flow at %d points', npts);
-                waitbar(wbprog(3), wbh, msg)
-            end
-            wt = wt + calcUniform(W, zeta);
-        end
-        
-        % Copy to output.
-        w = nan(size(z));
-        w(nnL) = wt;
-        
-        if W.useWaitBar
-            delete(wbh)
-            drawnow
-        end
+        w = calcPotential(W, z);
     end
     
     function W = set.useWaitBar(W, value)
@@ -244,7 +192,7 @@ methods
         % Calls w = feval(W, zeta).
         
         if numel(S) == 1 && strcmp(S.type, '()')
-            out = feval(W, S.subs{:});
+            out = calcPotential(W, S.subs{:});
         else
             out = builtin('subsref', W, S);
         end
