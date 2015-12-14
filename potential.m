@@ -5,7 +5,7 @@ function pobj = potential(physicalDomain, varargin)
 
 if isa(physicalDomain, 'flowRegion')
     if isbounded(physicalDomain.islands)
-        pobj = potentialInt(physicalDomain, varargin{:});
+        pobj = potentialBdd(physicalDomain, varargin{:});
     else
         pobj = potentialExt(physicalDomain, varargin{:});
     end

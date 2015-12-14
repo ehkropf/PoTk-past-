@@ -1,5 +1,5 @@
-classdef potentialInt < complexPotential
-%potentialInt is potential in the bounded domain.
+classdef potentialBdd < complexPotential
+%potentialBdd is potential in the bounded domain.
 
 % E. Kropf, 2015
 
@@ -8,7 +8,7 @@ properties(SetAccess=protected)
 end
 
 methods
-    function W = potentialInt(theDomain, varargin)
+    function W = potentialBdd(theDomain, varargin)
         if ~nargin
             return
         end
