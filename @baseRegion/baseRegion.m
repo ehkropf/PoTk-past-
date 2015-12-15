@@ -70,7 +70,7 @@ methods
         if nvararg == 0
             R.circulation = zeros(size(dv));
         else
-            props = properties(baseRegion);
+            props = properties('baseRegion');
             props = props(3:end);
             if ischar(varargin{1})
                 for i = 1:2:nvararg-1
@@ -120,7 +120,7 @@ methods
             error(PoTk.ErrorTypeString.InvalidValue, ...
                 'Circulation values must be real and finite.')
         end
-        R.circulation = vec(:)';
+        R.circulation = vec(:);
     end
     
     function R = set.singularities(R, vec)
@@ -136,12 +136,11 @@ methods
             error(PoTk.ErrorTypeString.InvalidValue, ...
                 'Singularity strength values must be real and finite.')
         end
-        R.singStrength = vec(:)';
+        R.singStrength = vec(:);
     end
 end
 
-methods(Access=protected)    
-    %%%%% Abstract methods %%%%%
+methods(Access=protected,Abstract)    
     m = mGetter(R)      % Return valid value for connectivity m.
     sanityCheck(R)      % Region is in valid state or throw error.
 end

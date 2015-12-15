@@ -31,8 +31,9 @@ methods
             return
         end
         
-        if ~isa(theDomain, 'flowRegion')
-            error('PoTk:InvalidArgument', 'Expected a flowRegion object.')
+        if ~isa(theDomain, 'regionBdd')
+            error(PoTk.ErrorTypeString.InvalidArgument, ...
+                'Expected a flowRegion object.')
         end
         W.theDomain = theDomain;
         
@@ -46,8 +47,12 @@ methods(Access=protected)
         
         w = complex(zeros(size(zeta)));
         
-        gammav = W.theDomain.islandCirculation(2:end);
+        gammav = W.theDomain.circulation;
+        m = numel(gammav);
         for j = find(gammav')
+            waitbarUpdate(W, (j-1)/m/3, ...
+                sprintf('Boundary contribution (%d/%d) at %d points', ...
+                j, m, numel(zeta)))
             w = w + gammav(j)*W.vjfuns{j}(zeta);
         end
     end
@@ -55,14 +60,17 @@ methods(Access=protected)
     function w = calcPotential(W, zeta)
         % Combine potential flows.
         
-        w = calcUniformFlow(W, zeta) ...
-            + calcVortexCirc(W, zeta) ...
-            + calcBdryCirc(W, zeta);
+        W = waitbarInitialize(W, 'Computing potential values');
+        w = calcBdryCirc(W, zeta);
+        w = w + calcVortexCirc(W, zeta);
+        w = w + calcUniformFlow(W, zeta);
+        waitbarRelease(W);
     end
     
     function w = calcUniformFlow(W, zeta)
         % Uniform flow potential.
         
+        waitbarUpdate(W, 2/3, 'Uniform field contribution')
         w = complex(zeros(size(zeta)));
         if isempty(W.beta) || W.theDomain.uniformStrength == 0
             return
@@ -76,8 +84,12 @@ methods(Access=protected)
         
         w = complex(zeros(size(zeta)));
         
-        Gammav = W.theDomain.vortexCirculation;
+        Gammav = W.theDomain.singStrength;
+        n = numel(Gammav);
         for k = find(Gammav')
+            waitbarUpdate(W, (1 + (k-1)/n)/3, ...
+                sprintf('Singularity contribution (%d/%d) at %d points', ...
+                k, n, numel(zeta)))
             w = w + Gammav(k)*W.g0funs{k}(zeta);
         end
     end
@@ -85,9 +97,11 @@ methods(Access=protected)
     function W = constructPotential(W)
         % Call all the setup methods. In the proper order.
         
+        W = waitbarInitialize(W, 'Configuring boundary functions');
         W = setupBdryCirc(W);
         W = setupVortexCirc(W);
         W = setupUniformFlow(W);
+        W = waitbarRelease(W);
     end
 
     function W = setupBdryCirc(W)
@@ -97,10 +111,13 @@ methods(Access=protected)
         % functions.
         
         m = W.theDomain.m;
-        D = W.theDomain.islands;
+        dv = W.theDomain.centers;
+        qv = W.theDomain.radii;
         
-        W.vjfuns{1} = vjFirstKind(1, D);
+        W.vjfuns{1} = vjFirstKind(1, skpDomain(dv, qv));
         for j = 2:m
+            waitbarUpdate(W, (j-1)/m/3, ...
+                sprintf('Boundary part (%d/%d)', j, m))
             W.vjfuns{j} = vjFirstKind(j, W.vjfuns{1});
         end
     end
@@ -108,6 +125,7 @@ methods(Access=protected)
     function W = setupUniformFlow(W)
         % Uniform flow depends on existence of point beta.
         
+        waitbarUpdate(W, 2/3, 'Unform field part')
         if isempty(W.beta) || W.theDomain.uniformStrength == 0
             return
         end
@@ -119,13 +137,15 @@ methods(Access=protected)
         % Construct Green's functions for vortices.
         % Extra boundary circulation goes to C0.
         
-        alphav = W.theDomain.vortexLocation;
+        alphav = W.theDomain.singularities;
         n = numel(alphav);
         if n == 0
             return
         end
         
-        for k = find(W.theDomain.vortexCirculation')
+        for k = find(W.theDomain.singStrength')
+            waitbarUpdate(W, (1 + (k-1)/n)/3, ...
+                sprintf('Singularity part (%d/%d)', k, n))
             W.g0funs{k} = greensC0(alphav(k), W.vjfuns{1});
         end
     end

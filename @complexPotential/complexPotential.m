@@ -43,6 +43,7 @@ end
 
 properties(Access=private)
     varPropList = {'useWaitBar', 'streamWithField'}
+    waitbarHandle
 end
 
 methods
@@ -341,6 +342,7 @@ methods(Access=protected)
         % Provide name/value pair processing for properties
         %   useWaitBar
         %   streamWithField
+        
         if ~nargin
             return
         end
@@ -406,6 +408,34 @@ methods(Access=protected)
         if ~islogical(tf)
             error('PoTk:InvalidArgument', 'Excpected logical value.')
         end
+    end
+    
+    function W = waitbarInitialize(W, name, msg)
+        if ~W.useWaitBar
+            return
+        end
+        if nargin < 3
+            msg = '';
+        end
+        W.waitbarHandle = waitbar(0, msg, 'name', name);
+    end
+    
+    function waitbarUpdate(W, x, msg)
+        if ~W.useWaitBar || isempty(W.waitbarHandle) ...
+                || ~ishghandle(W.waitbarHandle)
+            return
+        end
+        waitbar(x, W.waitbarHandle, msg)
+    end
+    
+    function W = waitbarRelease(W)
+        if ~W.useWaitBar || isempty(W.waitbarHandle) ...
+                || ~ishghandle(W.waitbarHandle)
+            return
+        end
+        delete(W.waitbarHandle)
+        W.waitbarHandle = [];
+        drawnow
     end
     
     %%%%% Abstract protected methods.

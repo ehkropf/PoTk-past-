@@ -1,4 +1,4 @@
-function pobj = potential(physicalDomain, varargin)
+function pobj = potential(region, varargin)
 %POTENTIAL generates a complex potential object.
 
 % Everett Kropf, 2015
@@ -18,13 +18,14 @@ function pobj = potential(physicalDomain, varargin)
 % You should have received a copy of the GNU General Public License
 % along with PoTk.  If not, see <http://www.gnu.org/licenses/>.
 
-if isa(physicalDomain, 'flowRegion')
-    if isbounded(physicalDomain.islands)
-        pobj = potentialBdd(physicalDomain, varargin{:});
-    else
-        pobj = potentialExt(physicalDomain, varargin{:});
-    end
-else
-    args = [physicalDomain, varargin(:)];
-    pobj = builtin('potential', args{:});
+switch class(region)
+    case 'regionBdd'
+        pobj = potentialBdd(region, varargin{:});
+        
+    case 'regionExt'
+        pobj = potentialExt(region, varargin{:});
+        
+    otherwise
+        args = [region, varargin];
+        pobj = builtin('potential', args{:});
 end
