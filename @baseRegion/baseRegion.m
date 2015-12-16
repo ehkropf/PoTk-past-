@@ -108,7 +108,7 @@ methods
             end
         end
     end
-    
+        
     %---------------------------------------------------------------------
     function m = get.m(R)
         m = mGetter(R);
@@ -139,8 +139,8 @@ methods
     end
 end
 
-methods(Access=protected,Abstract)    
-    m = mGetter(R)      % Return valid value for connectivity m.
+methods(Abstract)
+    C = circleRegion(R)      % Convert to CMT circle region.
 end
 
 methods(Access=protected)

@@ -32,6 +32,46 @@ methods
         
         sanityCheck(R)
     end
+    
+    function C = circleRegion(R)
+        %C = circleRegion(R)
+        %  Convert PoTk region to a CMT circle region.
+        
+        C = circleRegion([0; R.centers], [1; R.radii]);
+    end
+    
+    function [zg, Lzg, axlim] = rectGrid(R, res, vpad)
+        %[zg, Lzg, axlim] = rectGrid(R, res, vpad)
+        %  Square point grid.
+        
+        if nargin < 3
+            vpad = 0.1;
+        end
+        if nargin < 2
+            res = 200;
+        end
+        
+        [X, Y] = meshgrid(linspace(-1, 1, res));
+        zg = complex(X, Y);
+        
+        cv = R.centers;
+        rv = R.radii;
+        Lzg = true(size(zg));
+        Lzg(abs(zg) >= 1-eps(2)) = false;
+        for j = 1:R.m
+            Lzg(abs(zg - cv(j)) <= rv(j)+eps(2)) = false;
+        end
+        alphav = R.singularities;
+        if vpad > 0
+            for k = 1:numel(alphav)
+                Lzg(abs(zg - alphav(k)) <= vpad) = false;
+            end
+        end
+        
+        if nargout > 2
+            axlim = [-1, 1, -1, 1];
+        end
+    end
 end
 
 methods(Access=protected)
