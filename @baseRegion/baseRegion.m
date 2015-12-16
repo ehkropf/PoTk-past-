@@ -144,15 +144,46 @@ methods(Access=protected,Abstract)
 end
 
 methods(Access=protected)
-    function sanityCheck(R)
+    function baseSanityCheck(R)
         %Checks that region is in a valid state. Throws error if not.
         
-        if ~isequal(numel(R.circulation), numel(R.centers))
+        if numel(R.circulation) ~= numel(R.centers)
             error(PoTk.ErrorTypeString.InvalidValue, ...
                 ['Circulation vector must have the same number of\n'...
                 'elements as there are inner boundaries.'])
         end
+        
+        if numel(R.singularities) ~= numel(R.singStrength)
+            error(PoTk.ErrorTypeString.InvalidValue, ...
+                ['Singularity strength vector must have the same number\n'...
+                'elements as the singularity location vector.'])
+        end
     end
+    
+    function sanityCheck(R)
+        % Call the sanity checks.
+        
+        try
+            baseSanityCheck(R)
+            subSanityCheck(R)
+        catch err
+            import PoTk.ErrorTypeString
+            switch err.identifier
+                case {ErrorTypeString.InvalidValue, ...
+                        ErrorTypeString.UndefinedState, ...
+                        ErrorTypeString.InvalidArgument}
+                    error(err.identifier, err.message)
+                    
+                otherwise
+                    rethrow(err)
+            end
+        end
+    end
+end
+
+methods(Access=protected,Abstract)    
+    m = mGetter(R)          % Return valid value for connectivity m.
+    subSanityCheck(R)       % Subclass sanity check.
 end
 
 end

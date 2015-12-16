@@ -39,10 +39,10 @@ methods(Access=protected)
         m = numel(R.centers) - 1;
     end
     
-    function sanityCheck(R)
+    function subSanityCheck(~)
         % Add checks to base.
         
-        sanityCheck@baseRegion(R)
+        % Nothing yet.
     end
 end
 
