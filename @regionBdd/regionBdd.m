@@ -33,23 +33,20 @@ methods
         if ~nargin
             return
         end
+        
+        sanityCheck(R)
     end
 end
 
 methods(Access=protected)
     function m = mGetter(R)
-        %Connectivity.
         m = numel(R.centers);
     end
     
     function sanityCheck(R)
-        %Checks that region is in a valid state. Throws error if not.
+        % Add checks to base set.
         
-        if ~isequal(numel(R.circulation), numel(R.centers))
-            error(PoTk.ErrorTypeString.InvalidValue, ...
-                ['Circulation vector must have the same number of\n'...
-                'elements as there are inner boundaries.'])
-        end
+        sanityCheck@baseRegion(R)
     end
 end
 

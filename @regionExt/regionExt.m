@@ -29,12 +29,20 @@ methods
         if ~nargin
             return
         end
+        
+        sanityCheck(R)
     end
 end
 
 methods(Access=protected)
     function m = mGetter(R)
         m = numel(R.centers) - 1;
+    end
+    
+    function sanityCheck(R)
+        % Add checks to base.
+        
+        sanityCheck@baseRegion(R)
     end
 end
 

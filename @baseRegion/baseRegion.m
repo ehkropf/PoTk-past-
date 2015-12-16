@@ -106,8 +106,6 @@ methods
                 end
             end
         end
-        
-        sanityCheck(R)
     end
     
     %---------------------------------------------------------------------
@@ -142,7 +140,18 @@ end
 
 methods(Access=protected,Abstract)    
     m = mGetter(R)      % Return valid value for connectivity m.
-    sanityCheck(R)      % Region is in valid state or throw error.
+end
+
+methods(Access=protected)
+    function sanityCheck(R)
+        %Checks that region is in a valid state. Throws error if not.
+        
+        if ~isequal(numel(R.circulation), numel(R.centers))
+            error(PoTk.ErrorTypeString.InvalidValue, ...
+                ['Circulation vector must have the same number of\n'...
+                'elements as there are inner boundaries.'])
+        end
+    end
 end
 
 end
