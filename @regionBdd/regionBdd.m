@@ -18,10 +18,6 @@ classdef regionBdd < baseRegion
 % You should have received a copy of the GNU General Public License
 % along with PoTk.  If not, see <http://www.gnu.org/licenses/>.
 
-properties
-    dipole                      % Dipole source/sink location
-end
-
 methods
     function R = regionBdd(dv, qv, varargin)
         if ~nargin
