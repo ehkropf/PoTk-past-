@@ -23,7 +23,7 @@ methods
         if ~nargin
             args = {};
         else
-            args = {dv, qv, varargin(:)};
+            args = [dv, qv, varargin];
         end
         R = R@baseRegion(args{:});
         if ~nargin
