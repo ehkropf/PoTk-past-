@@ -40,18 +40,22 @@ methods
         C = circleRegion(R.centers, R.radii);
     end
     
-    function [zg, Lzg, axlim] = rectGrid(R, res, axlim, vpad)
-        %[zg, Lzg, axlim] = rectGrid(R, res, axlim, vpad)
+    function [zg, axlim] = rectGrid(R, res, axlim, vpad)
+        %[zg, axlim] = rectGrid(R, res, axlim, vpad)
         %  Rectangular point grid.
+        %  Argument axlim can be a valid axis array or a scalar where 1.0
+        %  represents the smallest square to containt the circles and the
+        %  singularity points.
         
-        if nargin < 4
-            vpad = 0.1;
+        if nargin < 2
+            res = 200;
         end
         if nargin < 3 || isempty(axlim)
             axlim = plotbox(R, 1.2);
         end
-        if nargin < 2
-            res = 200;
+        if nargin < 4
+            baselen = min(diff(axlim(1:2)), diff(axlim(3:4)));
+            vpad = 0.02*baselen;
         end
         
         if numel(axlim) == 1
@@ -64,14 +68,13 @@ methods
         
         cv = R.centers;
         rv = R.radii;
-        Lzg = true(size(zg));
         for j = 1:R.m+1
-            Lzg(abs(zg - cv(j)) <= rv(j)+eps(2)) = false;
+            zg(abs(zg - cv(j)) <= rv(j)+eps(2)) = nan;
         end
         alphav = R.singularities;
         if vpad > 0
             for k = 1:numel(alphav)
-                Lzg(abs(zg - alphav(k)) <= vpad) = false;
+                zg(abs(zg - alphav(k)) <= vpad) = nan;
             end
         end
     end

@@ -40,15 +40,15 @@ methods
         C = circleRegion([0; R.centers], [1; R.radii]);
     end
     
-    function [zg, Lzg, axlim] = rectGrid(R, res, vpad)
-        %[zg, Lzg, axlim] = rectGrid(R, res, vpad)
+    function [zg, axlim] = rectGrid(R, res, vpad)
+        %[zg, axlim] = rectGrid(R, res, vpad)
         %  Square point grid.
         
-        if nargin < 3
-            vpad = 0.1;
-        end
         if nargin < 2
             res = 200;
+        end
+        if nargin < 3
+            vpad = 0.01;
         end
         
         [X, Y] = meshgrid(linspace(-1, 1, res));
@@ -56,15 +56,14 @@ methods
         
         cv = R.centers;
         rv = R.radii;
-        Lzg = true(size(zg));
-        Lzg(abs(zg) >= 1-eps(2)) = false;
+        zg(abs(zg) >= 1-eps(2)) = false;
         for j = 1:R.m
-            Lzg(abs(zg - cv(j)) <= rv(j)+eps(2)) = false;
+            zg(abs(zg - cv(j)) <= rv(j)+eps(2)) = nan;
         end
         alphav = R.singularities;
         if vpad > 0
             for k = 1:numel(alphav)
-                Lzg(abs(zg - alphav(k)) <= vpad) = false;
+                zg(abs(zg - alphav(k)) <= vpad) = nan;
             end
         end
         
