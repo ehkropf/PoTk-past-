@@ -54,6 +54,9 @@ methods
             res = 200;
         end
         
+        if numel(axlim) == 1
+            axlim = plotbox(R, axlim);
+        end
         x = linspace(axlim(1), axlim(2), res);
         y = linspace(axlim(3), axlim(4), res);
         [X, Y] = meshgrid(x, y);
@@ -62,7 +65,7 @@ methods
         cv = R.centers;
         rv = R.radii;
         Lzg = true(size(zg));
-        for j = 1:R.m
+        for j = 1:R.m+1
             Lzg(abs(zg - cv(j)) <= rv(j)+eps(2)) = false;
         end
         alphav = R.singularities;
