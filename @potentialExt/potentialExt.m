@@ -31,14 +31,14 @@ classdef potentialExt < complexPotential
 % along with PoTk.  If not, see <http://www.gnu.org/licenses/>.
 
 properties(SetAccess=protected)
-end
-
-properties(Access=protected)
     bddDomain               % (r/o) Bounded domain.
     bddPotential            % (r/o) Bounded potential.
     zetaf                   % (r/o) Mobius transform unbounded -> bounded.
     beta = inf              % (r/o) Image of infinity in bounded domain.
     greensBeta              % (r/o) Green's function wrt C0 at beta.
+end
+
+properties(Access=protected)
 end
 
 methods
