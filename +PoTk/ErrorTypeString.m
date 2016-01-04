@@ -1,5 +1,5 @@
 classdef ErrorTypeString
-%PoTkErrorType encapsulates error types.
+%PoTk.ErrorTypeString encapsulates error ID strings.
 
 % Everett Kropf, 2015
 % 
