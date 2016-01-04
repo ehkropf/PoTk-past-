@@ -40,6 +40,12 @@ methods
         C = circleRegion([0; R.centers], [1; R.radii]);
     end
     
+    function D = skpDomain(R)
+        % Convert to SKPrime domain object.
+        
+        D = skpDomain(R.centers, R.radii);
+    end
+    
     function [zg, axlim] = rectGrid(R, res, vpad)
         %[zg, axlim] = rectGrid(R, res, vpad)
         %  Square point grid.
