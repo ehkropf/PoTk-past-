@@ -52,7 +52,7 @@ methods
             error(PoTk.ErrorTypeString.InvalidArgument, ...
                 'Expected a "regionExt" object.')
         end        
-        W.inputDomain = theDomain;
+        W.theDomain = theDomain;
         
         W = constructPotential(W);
     end
@@ -97,19 +97,16 @@ methods(Access=protected)
     function W = setupBoundedRegion(W)
         % Mobius transform of exterior domain.
         
-        Do = circleRegion(W.theDomain);
-        m = numel(W.theDomain.centers);
-        if m > 0
-            % First circle is now outer unit circle.
-            zeta = mobius(0, Do.radii(1), 1, -Do.centers(1));
+        if W.theDomain.m > 0
+            [Db, zeta] = regionBdd.fromExterior(W.theDomain);
+            
+            W.beta = pole(inv(zeta));
+            W.zetaf = zeta;
+            W.bddDomain = Db;
         else
-            % Mobius transform is just the identity.
-            zeta = mobius(1, 0, 0, 1);
+            % No equivalent bounded domain.
+            W.zetaf = mobius(1, 0, 0, 1);
         end
-        
-        W.beta = pole(inv(zeta));
-        W.zetaf = zeta;
-        W.bddDomain = zeta(Do);
     end
     
     function W = setupBoundedPotential(W)
