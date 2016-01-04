@@ -111,8 +111,9 @@ methods(Static)
         
         % Copy properties.
         R.circulation = Re.circulation(2:end);
+        R.singularities = zeta(Re.singularities);
         props = properties(Re);
-        props = props(4:end);
+        props = props(5:end);
         for k = 1:numel(props)
             R.(props{k}) = Re.(props{k});
         end
