@@ -378,42 +378,7 @@ methods(Access=protected)
             cpot.(vstr) = varargin{j+1};
         end
     end
-    
-    function W = constructPotential(W)
-        % Precompute various parts of the potential function.
         
-        if W.useWaitBar
-            wbh = waitbar(0, 'Configuring computational domain.', ...
-                'name', 'Potential setup calcuations');
-        end
-        W = setupPrimeDomain(W);
-        
-        if W.useWaitBar
-            waitbar(1/5, wbh, 'Configuring G0 at beta.')
-        end
-        W = setupG0beta(W);
-        
-        if W.useWaitBar
-            waitbar(2/5, wbh, 'Configuring the Gj at beta.')
-        end
-        W = setupGjFuns(W);
-
-        if W.useWaitBar
-            waitbar(3/5, wbh, 'Configuring the G0 at alpha.')
-        end
-        W = setupG0alpha(W);
-        
-        if W.useWaitBar
-            waitbar(4/5, wbh, 'Configuring uniform flow.')
-        end
-        W = setupUniform(W);
-
-        if W.useWaitBar
-            delete(wbh)
-            drawnow
-        end
-    end
-    
     function tf = validateLogical(~, value)
         % Logical value validation for set functions.
         
@@ -452,6 +417,7 @@ methods(Access=protected)
     end
     
     %%%%% Abstract protected methods.
+    W = constructPotential(W)
     w = calcPotential(W, zeta)
 end
 
