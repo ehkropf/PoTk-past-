@@ -1,5 +1,14 @@
 classdef(Abstract) complexPotential
 %complexPotential is the abstract base class for complex potentials.
+%
+%  This abstract class may not be instantiated directly.
+%
+%  Constructor:
+%  P = complexPotential('name1', value1, ...)
+%  Provide name/value pair processing for properties
+%    useWaitBar
+%    streamWithField
+
 
 % Everett Kropf, 2015
 % 
@@ -47,6 +56,10 @@ properties(Access=private)
 end
 
 methods
+    % Constructor is protected method; see below.
+    % FIXME: If this class is abstract, a protected constructor doesn't
+    % make too much sense.
+    
     function disp(W)
         cname = class(W);
         fprintf(['  <a href="matlab:helpPopup %s">%s</a> ' ...

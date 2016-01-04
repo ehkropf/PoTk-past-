@@ -1,5 +1,17 @@
 classdef potentialBdd < complexPotential
-%potentialBdd is potential in the bounded domain.
+%potentialBdd is the bounded domain complex potential.
+%
+% W = potentialBdd(aDomain)
+%   aDomain = regionBdd object.
+%
+% W = potentialBdd(aDomain, 'prop1', 'value1', ...)
+%   Takes name/value pairs to set behaviour of the potential object. These
+%   may be:
+%   'useWaitBar' -- show a waitbar while doing calculations (default = false).
+%   'streamWithField' -- plot stream lines with velocity field
+%     (default = true).
+%
+% See also regionBdd.
 
 % Everett Kropf, 2015
 % 

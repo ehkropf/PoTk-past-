@@ -1,5 +1,12 @@
 function pobj = potential(region, varargin)
 %POTENTIAL generates a complex potential object.
+%
+% P = potential(region, ...)
+% Create complex potential object based on region type. If region is not
+% of class |regionExt| or |regionBdd|, then the builtin MATLAB potential
+% function is called.
+%
+% See also regionExt, potentialExt, regionBdd, potentialBdd, potential.
 
 % Everett Kropf, 2015
 % 

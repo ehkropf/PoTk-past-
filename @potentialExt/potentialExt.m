@@ -1,8 +1,8 @@
 classdef potentialExt < complexPotential
-%potentialExt represents the complex potential function.
+%potentialExt is the unbounded domain complex potential.
 %
 % W = potentialExt(aDomain)
-%   aDomain = flowRegion object.
+%   aDomain = regionExt object.
 %
 % W = potentialExt(aDomain, 'prop1', 'value1', ...)
 %   Takes name/value pairs to set behaviour of the potential object. These
@@ -11,7 +11,7 @@ classdef potentialExt < complexPotential
 %   'streamWithField' -- plot stream lines with velocity field
 %     (default = true).
 %
-% See also flowRegion.
+% See also regionExt.
 
 % Everett Kropf, 2015
 % 
