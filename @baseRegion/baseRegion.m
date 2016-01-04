@@ -108,6 +108,35 @@ methods
             end
         end
     end
+    
+    function numberFeatures(R)
+        % Duplicate flowRegion.numberIslandsAndVortices(...).s
+    end
+    
+    function plot(R)
+        %Draw the flow region.
+        %
+        % plot(R) where R is a baseRegion object.
+        
+        cah = newplot;
+        washold = ishold;
+        
+        hold on
+        Rc = circleRegion(R);
+        fill(inv(Rc))
+        plot(Rc)
+        
+        z = R.singularities;
+        plot(real(z), imag(z), 'k.', 'markersize', 18)
+        
+        if ~washold
+            cmtplot.whitefigure(cah)
+            axis(plotbox(fd))
+            aspectequal
+            axis off
+            hold off
+        end
+    end
         
     %---------------------------------------------------------------------
     function m = get.m(R)
@@ -181,7 +210,7 @@ methods(Access=protected)
     end
 end
 
-methods(Access=protected,Abstract)    
+methods(Access=protected,Abstract)
     m = mGetter(R)          % Return valid value for connectivity m.
     subSanityCheck(R)       % Subclass sanity check.
 end
