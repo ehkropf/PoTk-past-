@@ -34,6 +34,11 @@ properties(SetAccess=protected)
 end
 
 properties(Access=protected)
+    bddDomain               % (r/o) Bounded domain.
+    bddPotential            % (r/o) Bounded potential.
+    zetaf                   % (r/o) Mobius transform unbounded -> bounded.
+    beta = inf              % (r/o) Image of infinity in bounded domain.
+    greensBeta              % (r/o) Green's function wrt C0 at beta.
 end
 
 methods
@@ -54,29 +59,70 @@ methods
 end
 
 methods(Access=protected)
+    %%%%% Calculation.
     function w = calcPotential(W, z)
+        % Combine with internal calculation.
         
+        zeta = W.zetaf(z);
+        w = calcBounded(W, zeta);
+        w = w - calcExternalPart(W, zeta);
     end
     
+    function w = calcBounded(W, zeta)
+        % Bounded potential part.
         
+        w = W.bddPotential(zeta);
     end
     
+    function w = calcExternalPart(W, zeta)
+        % Calculate extra part for external flow.
         
+        extSums = sum(W.theDomain.singStrength) ...
+            + sum(W.theDomain.circulation);
+        if extSums == 0
+            w = complex(zeros(size(zeta)));
+            return
         end
+        w = extSums*W.greensBeta(zeta);
     end
     
+    %%%%% Construction.
+    function W = constructPotential(W)
         
+        W = setupBoundedRegion(W);
+        W = setupBoundedPotential(W);
+        W = setupGreensFunction(W);
     end
     
+    function W = setupBoundedRegion(W)
+        % Mobius transform of exterior domain.
         
+        Do = circleRegion(W.theDomain);
+        m = numel(W.theDomain.centers);
+        if m > 0
+            % First circle is now outer unit circle.
+            zeta = mobius(0, Do.radii(1), 1, -Do.centers(1));
         else
+            % Mobius transform is just the identity.
             zeta = mobius(1, 0, 0, 1);
         end
         
+        W.beta = pole(inv(zeta));
+        W.zetaf = zeta;
+        W.bddDomain = zeta(Do);
     end
     
+    function W = setupBoundedPotential(W)
+        % Get the bounded potential.
         
+        W.bddPotential = potentialBdd(W.bddDomain);
+    end
+    
+    function W = setupGreensFunction(W)
+        % Now for the Green's function.
         
+        if W.theDomain.m > 1
+            W.greensBeta = greensC0(W.beta, skpDomain(W.bddDomain));
         end
     end
     
