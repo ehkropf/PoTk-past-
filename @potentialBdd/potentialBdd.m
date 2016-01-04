@@ -45,7 +45,7 @@ methods
         
         if ~isa(theDomain, 'regionBdd')
             error(PoTk.ErrorTypeString.InvalidArgument, ...
-                'Expected a flowRegion object.')
+                'Expected a "regionBdd" object.')
         end
         W.theDomain = theDomain;
         
@@ -54,6 +54,7 @@ methods
 end
 
 methods(Access=protected)
+    %%%%% Calculation.
     function w = calcBdryCirc(W, zeta)
         % Circulation on the boundaries.
         
@@ -106,6 +107,7 @@ methods(Access=protected)
         end
     end
     
+    %%%%% Construction.
     function W = constructPotential(W)
         % Call all the setup methods. In the proper order.
         
