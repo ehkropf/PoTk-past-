@@ -86,6 +86,37 @@ methods(Access=protected)
         w = extSums*W.greensBeta(zeta);
     end
     
+%     function w = calcUniform(W, zeta)
+%         % Calculate uniform flow portion of potential.
+%         
+%         Uf = W.inputDomain.uniformStrength;
+%         Chi = W.inputDomain.uniformAngle;
+%         
+%         switch W.primeDomain.m
+%             case 0
+%                 w = Uf*zeta*exp(-1i*Chi);
+%                 return
+%                 
+%             case 1
+%                 w = Uf*(exp(-1i*Chi)./(zeta - W.beta) ...
+%                     + exp(1i*Chi)*(zeta - W.beta));
+%                 return
+%                 
+%             otherwise
+%                 w = zeros(size(zeta));
+%                 h = W.hCenterDiff;
+%                 if mod(Chi, pi) > eps(pi)
+%                     w = w + ...
+%                         (W.G0bxy{1,1}(zeta) - W.G0bxy{2,1}(zeta))/h*sin(Chi);
+%                 end
+%                 if mod(Chi + pi/2, pi) > eps(pi)
+%                     w = w + ...
+%                         (W.G0bxy{1,2}(zeta) - W.G0bxy{2,2}(zeta))/h*cos(Chi);
+%                 end
+%                 w = -4*pi*Uf*w;
+%         end
+%     end
+
     %%%%% Construction.
     function W = constructPotential(W)
         
