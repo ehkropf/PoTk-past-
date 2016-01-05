@@ -110,7 +110,16 @@ methods
     end
     
     function numberFeatures(R)
-        % Duplicate flowRegion.numberIslandsAndVortices(...).s
+        %Number flow region features. Assumes plot has already been
+        %called.
+        
+        numberBoundaries(R)
+        d = axis;
+        d = 0.01*max(diff(d(1:2)), diff(d(3:4)));
+        for k = 1:numel(R.singularities)
+            v = R.singularities(k);
+            text(real(v) + d, imag(v) + d, num2str(k), 'color', 'm')
+        end
     end
     
     function plot(R)
@@ -123,7 +132,7 @@ methods
         
         hold on
         Rc = circleRegion(R);
-        fill(inv(Rc))
+        fillHoles(R)
         plot(Rc)
         
         z = R.singularities;
@@ -131,7 +140,7 @@ methods
         
         if ~washold
             cmtplot.whitefigure(cah)
-            axis(plotbox(fd))
+            axis(plotbox(R))
             aspectequal
             axis off
             hold off
@@ -169,7 +178,9 @@ methods
 end
 
 methods(Abstract)
-    C = circleRegion(R)      % Convert to CMT circle region.
+    C = circleRegion(R)         % Convert to CMT circle region.
+    numberBoundaries(R)         % Helper function for numberFeatures().
+    xylim = plotbox(R, scale)   % Axis limits for plotting.
 end
 
 methods(Access=protected)
@@ -206,6 +217,16 @@ methods(Access=protected)
                 otherwise
                     rethrow(err)
             end
+        end
+    end
+    
+    function fillHoles(R)
+        %Fill inner holes with fill color.
+        
+        dv = R.centers;
+        qv = R.radii;
+        for j = 1:numel(dv)
+            fill(circle(dv(j), qv(j)))
         end
     end
 end

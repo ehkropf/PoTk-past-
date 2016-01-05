@@ -40,10 +40,24 @@ methods
         C = circleRegion([0; R.centers], [1; R.radii]);
     end
     
+    function numberBoundaries(R)
+        for j = 1:R.m
+            c = R.centers(j);
+            text(real(c), imag(c), num2str(j))
+        end
+    end
+    
     function D = skpDomain(R)
         % Convert to SKPrime domain object.
         
         D = skpDomain(R.centers, R.radii);
+    end
+    
+    function xylim = plotbox(~, scale)
+        if nargin < 2
+            scale = 1;
+        end
+        xylim = scale*[-1, 1, -1, 1];
     end
     
     function [zg, axlim] = rectGrid(R, res, vpad)
@@ -54,17 +68,17 @@ methods
             res = 200;
         end
         if nargin < 3
-            vpad = 0.01;
+            vpad = 0; %0.005;
         end
         
         [X, Y] = meshgrid(linspace(-1, 1, res));
         zg = complex(X, Y);
         
-        cv = R.centers;
-        rv = R.radii;
-        zg(abs(zg) >= 1-eps(2)) = false;
+        dv = R.centers;
+        qv = R.radii;
+        zg(abs(zg) >= 1-eps(2)) = nan;
         for j = 1:R.m
-            zg(abs(zg - cv(j)) <= rv(j)+eps(2)) = nan;
+            zg(abs(zg - dv(j)) <= qv(j)+eps(2)) = nan;
         end
         alphav = R.singularities;
         if vpad > 0
@@ -73,7 +87,7 @@ methods
             end
         end
         
-        if nargout > 2
+        if nargout > 1
             axlim = [-1, 1, -1, 1];
         end
     end
