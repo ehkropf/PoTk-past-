@@ -101,10 +101,10 @@ methods
             postCreateSetup(pg)
             
             if nargin > 1
-                if ~isa(adomain, 'flowRegion')
-                    error('PoTk:InvalidArgument', ...
-                        'Expected a flow domain object, got a "%s" instead.', ...
-                        class(adomain))
+                if ~isa(adomain, 'regionExt')
+                    error(PoTk.ErrorTypeString.InvalidArgument, ...
+                        ['Expected an exterior region object, '
+                        'got a "%s" instead.'], class(adomain))
                 end
                 readPhysicalDomain(pg, adomain)
             end
@@ -900,10 +900,10 @@ methods(Access=protected)
     end
     
     function readPhysicalDomain(pg, physdom)
-        pg.circles = boundary(physdom.islands);
-        pg.circulation = physdom.islandCirculation;
-        pg.vortices = physdom.vortexLocation;
-        pg.strength = physdom.vortexCirculation;
+        pg.circles = boundary(circleRegion(physdom));
+        pg.circulation = physdom.circulation;
+        pg.vortices = physdom.singularities;
+        pg.strength = physdom.singStrength;
         pg.flowStrength = physdom.uniformStrength;
         pg.flowAngle = physdom.uniformAngle;
         pg.dirtyDomain = true;
