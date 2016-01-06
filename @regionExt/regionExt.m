@@ -148,12 +148,10 @@ methods
         % Copy properties.
         Rb.circulation = R.circulation(2:end);
         Rb.singularities = zeta(R.singularities);
+        Rb.singStrength = R.singStrength;
+        Rb.uniformStrength = R.uniformStrength;
+        Rb.uniformAngle = -R.uniformAngle;
         Rb.dipole = zeta(R.dipole);        
-        props = properties(R);
-        props = props(5:end-1);
-        for k = 1:numel(props)
-            Rb.(props{k}) = R.(props{k});
-        end
     end
 end
 

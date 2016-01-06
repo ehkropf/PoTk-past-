@@ -102,7 +102,7 @@ methods(Access=protected)
         
         beta = W.theDomain.dipole;
         U = W.theDomain.uniformStrength;
-        Chi = W.theDomain.uniformAngle;
+        Chi = -W.theDomain.uniformAngle;
         if isempty(beta) || U == 0
             w = complex(zeros(size(zeta)));
             return
