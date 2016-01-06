@@ -161,12 +161,6 @@ methods(Access=protected)
     function m = mGetter(R)
         m = numel(R.centers) - 1;
     end
-    
-    function subSanityCheck(~)
-        % Add checks to base.
-        
-        % Nothing yet.
-    end
 end
 
 end
