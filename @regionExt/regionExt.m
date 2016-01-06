@@ -43,6 +43,10 @@ methods
             return
         end
         
+        if isempty(R.dipole)
+            % Default dipole location.
+            R.dipole = inf;
+        end
         sanityCheck(R)
     end
     

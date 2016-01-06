@@ -43,7 +43,7 @@ properties
     singStrength                % Vector of scalars for singularity strength
     uniformStrength = 0         % Uniform background field strength
     uniformAngle = 0            % Background field angle
-    dipole = complex(inf)       % Uniform field dipole location
+    dipole                      % Uniform field dipole location
 end
 
 properties(Dependent, Hidden)
