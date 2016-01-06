@@ -56,6 +56,12 @@ methods
         
         W = constructPotential(W);
     end
+    
+    function Wb = potentialBdd(W)
+        %Convert external to bounded potential.
+        
+        Wb = W.bddPotential;
+    end
 end
 
 methods(Access=protected)
