@@ -93,6 +93,10 @@ methods
             if ischar(varargin{1})
                 for i = 1:2:nvararg-1
                     try
+                        if isempty(varargin{i+1})
+                            % Ignore empty argument.
+                            continue
+                        end
                         vstr = validatestring(varargin{i}, props);
                         R.(vstr) = varargin{i+1};
                     catch err
@@ -115,6 +119,10 @@ methods
             else
                 for i = 1:nvararg
                     try
+                        if isempty(varargin{i})
+                            % Ignore empty argument.
+                            continue
+                        end
                         R.(props{i}) = varargin{i};
                     catch err
                         error(PoTk.ErrorTypeString.InvalidArgument, ...
@@ -201,6 +209,24 @@ methods(Abstract)
 end
 
 methods(Access=protected)
+    function sanityCheck(R)
+        % Call the sanity checks.
+        
+        try
+            baseSanityCheck(R)
+            subSanityCheck(R)
+        catch err
+            import PoTk.ErrorTypeString.*
+            switch err.identifier
+                case {InvalidValue, UndefinedState, InvalidArgument}
+                    error(err.identifier, err.message)
+                    
+                otherwise
+                    rethrow(err)
+            end
+        end
+    end
+    
     function baseSanityCheck(R)
         %Checks that region is in a valid state. Throws error if not.
         
@@ -215,26 +241,16 @@ methods(Access=protected)
                 ['Singularity strength vector must have the same number\n'...
                 'elements as the singularity location vector.'])
         end
+        
+        if isempty(R.uniformStrength) ...
+                || ~PoTk.isRealAndFinite(R.uniformStrength)
+            error(PoTk.ErrorTypeString.InvalidValue, ...
+                'Uniform field strength must be a real, finite number.')
+        end
     end
     
-    function sanityCheck(R)
-        % Call the sanity checks.
-        
-        try
-            baseSanityCheck(R)
-            subSanityCheck(R)
-        catch err
-            import PoTk.ErrorTypeString
-            switch err.identifier
-                case {ErrorTypeString.InvalidValue, ...
-                        ErrorTypeString.UndefinedState, ...
-                        ErrorTypeString.InvalidArgument}
-                    error(err.identifier, err.message)
-                    
-                otherwise
-                    rethrow(err)
-            end
-        end
+    function subSanityCheck(~)
+        %Override this method in subclass for custom sanity checks.
     end
     
     function fillHoles(R)
@@ -250,7 +266,6 @@ end
 
 methods(Access=protected,Abstract)
     m = mGetter(R)          % Return valid value for connectivity m.
-    subSanityCheck(R)       % Subclass sanity check.
 end
 
 end

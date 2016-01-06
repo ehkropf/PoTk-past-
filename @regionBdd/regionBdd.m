@@ -113,13 +113,13 @@ methods(Access=protected)
         m = numel(R.centers);
     end
     
-    function subSanityCheck(~)
+    function subSanityCheck(R)
         % Add checks to base set.
         
-        % Nothing yet.
-    end
-end
-
+        if isempty(R.dipole) && R.uniformStrength ~= 0
+            error(PoTk.ErrorTypeString.UndefinedState, ...
+                ['Dipole location must be specified if setting uniform ', ...
+                'field strength to non-zero value.'])
         end
     end
 end
