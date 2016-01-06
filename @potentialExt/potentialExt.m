@@ -98,7 +98,7 @@ methods(Access=protected)
         % Mobius transform of exterior domain.
         
         if W.theDomain.m > 0
-            [Db, zeta] = regionBdd.fromExterior(W.theDomain);
+            [Db, zeta] = regionBdd(W.theDomain);
             
             W.beta = pole(inv(zeta));
             W.zetaf = zeta;
