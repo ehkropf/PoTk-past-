@@ -31,9 +31,9 @@ classdef potentialBdd < complexPotential
 % along with PoTk.  If not, see <http://www.gnu.org/licenses/>.
 
 properties(SetAccess=protected)
-    beta                    % Dipole for uniform flow.
     g0funs = {}             % Vortex functions.
     vjfuns = {}             % First kind integrals.
+    dG0db = {}              % Green's derivatives wrt parameter.
 end
 
 methods
@@ -55,6 +55,16 @@ end
 
 methods(Access=protected)
     %%%%% Calculation.
+    function w = calcPotential(W, zeta)
+        % Combine potential flows.
+        
+        W = waitbarInitialize(W, 'Computing potential values');
+        w = calcBdryCirc(W, zeta);
+        w = w + calcVortexCirc(W, zeta);
+        w = w + calcUniformFlow(W, zeta);
+        waitbarRelease(W);
+    end
+    
     function w = calcBdryCirc(W, zeta)
         % Circulation on the boundaries.
         
@@ -70,28 +80,6 @@ methods(Access=protected)
         end
     end
     
-    function w = calcPotential(W, zeta)
-        % Combine potential flows.
-        
-        W = waitbarInitialize(W, 'Computing potential values');
-        w = calcBdryCirc(W, zeta);
-        w = w + calcVortexCirc(W, zeta);
-        w = w + calcUniformFlow(W, zeta);
-        waitbarRelease(W);
-    end
-    
-    function w = calcUniformFlow(W, zeta)
-        % Uniform flow potential.
-        
-        waitbarUpdate(W, 2/3, 'Uniform field contribution')
-        w = complex(zeros(size(zeta)));
-        if isempty(W.beta) || W.theDomain.uniformStrength == 0
-            return
-        end
-        
-        % Do something here. Superclass method?
-    end
-    
     function w = calcVortexCirc(W, zeta)
         % Point vortex circulation.
         
@@ -104,6 +92,46 @@ methods(Access=protected)
                 sprintf('Singularity contribution (%d/%d) at %d points', ...
                 k, n, numel(zeta)))
             w = w + Gammav(k)*W.g0funs{k}(zeta);
+        end
+    end
+    
+    function w = calcUniformFlow(W, zeta)
+        % Uniform flow potential.
+        
+        waitbarUpdate(W, 2/3, 'Uniform field contribution')
+        
+        beta = W.theDomain.dipole;
+        U = W.theDomain.uniformStrength;
+        Chi = W.theDomain.uniformAngle;
+        if isempty(beta) || U == 0
+            w = complex(zeros(size(zeta)));
+            return
+        end
+        
+        switch W.theDomain.m
+            case 0
+                w = U*zeta*exp(-1i*Chi);
+                return
+                
+            case 1
+                zMinusBeta = zeta - beta;
+                w = U*(exp(-1i*Chi)./zMinusBeta ...
+                    + exp(1i*Chi)*zMinusBeta);
+                
+            otherwise
+                w = complex(zeros(size(zeta)));
+                h = W.hCenterDiff;
+                if mod(Chi, pi) > eps(pi)
+                    % There is a horizontal component.
+                    w = w + ...
+                        (W.dG0db{1}(zeta) - W.dG0db{2}(zeta))/h*sin(Chi);
+                end
+                if mod(Chi + pi/2, pi) > eps(pi)
+                    % There is a vertical component.
+                    w = w + ...
+                        (W.dG0db{3}(zeta) - W.dG0db{4}(zeta))/h*cos(Chi);
+                end
+                w = -4*pi*U*w;
         end
     end
     
@@ -136,17 +164,6 @@ methods(Access=protected)
         end
     end
     
-    function W = setupUniformFlow(W)
-        % Uniform flow depends on existence of point beta.
-        
-        waitbarUpdate(W, 2/3, 'Unform field part')
-        if isempty(W.beta) || W.theDomain.uniformStrength == 0
-            return
-        end
-        
-        % Do something here? Superclass method?
-    end
-    
     function W = setupVortexCirc(W)
         % Construct Green's functions for vortices.
         % Extra boundary circulation goes to C0.
@@ -161,6 +178,34 @@ methods(Access=protected)
             waitbarUpdate(W, (1 + (k-1)/n)/3, ...
                 sprintf('Singularity part (%d/%d)', k, n))
             W.g0funs{k} = greensC0(alphav(k), W.vjfuns{1});
+        end
+    end
+    
+    function W = setupUniformFlow(W)
+        % Uniform flow depends on existence of point beta.
+        
+        waitbarUpdate(W, 2/3, 'Unform field part')
+        
+        beta = W.theDomain.dipole;
+        if isempty(beta) || W.theDomain.m < 2 ...
+                || W.theDomain.uniformStrength == 0
+            return
+        end
+        
+        Chi = W.inputDomain.uniformAngle;
+        h = W.hCenterDiff;
+        db = beta + 0.5*h*[1, -1, 1i, -1i];
+        W.dG0db = cell(4, 1);
+        
+        if mod(Chi, pi) > eps(pi)
+            % There is a horizontal component.
+            W.dG0db{1} = greensC0(db(1), W.vjfuns{1});
+            W.dG0db{2} = greensC0(db(2), W.vjfuns{1});
+        end
+        if mod(Chi + pi/2, pi) > eps(pi)
+            % There is a vertical component.
+            W.dG0db{3} = greensC0(db(3), W.vjfuns{1});
+            W.dG0db{4} = greensC0(db(4), W.vjfuns{1});
         end
     end
 end

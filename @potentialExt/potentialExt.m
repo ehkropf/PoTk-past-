@@ -86,37 +86,6 @@ methods(Access=protected)
         w = extSums*W.greensBeta(zeta);
     end
     
-%     function w = calcUniform(W, zeta)
-%         % Calculate uniform flow portion of potential.
-%         
-%         Uf = W.inputDomain.uniformStrength;
-%         Chi = W.inputDomain.uniformAngle;
-%         
-%         switch W.primeDomain.m
-%             case 0
-%                 w = Uf*zeta*exp(-1i*Chi);
-%                 return
-%                 
-%             case 1
-%                 w = Uf*(exp(-1i*Chi)./(zeta - W.beta) ...
-%                     + exp(1i*Chi)*(zeta - W.beta));
-%                 return
-%                 
-%             otherwise
-%                 w = zeros(size(zeta));
-%                 h = W.hCenterDiff;
-%                 if mod(Chi, pi) > eps(pi)
-%                     w = w + ...
-%                         (W.G0bxy{1,1}(zeta) - W.G0bxy{2,1}(zeta))/h*sin(Chi);
-%                 end
-%                 if mod(Chi + pi/2, pi) > eps(pi)
-%                     w = w + ...
-%                         (W.G0bxy{1,2}(zeta) - W.G0bxy{2,2}(zeta))/h*cos(Chi);
-%                 end
-%                 w = -4*pi*Uf*w;
-%         end
-%     end
-
     %%%%% Construction.
     function W = constructPotential(W)
         
@@ -153,50 +122,6 @@ methods(Access=protected)
             W.greensBeta = greensC0(W.beta, skpDomain(W.bddDomain));
         end
     end
-    
-%     function W = setupUniform(W)
-%         % Precompute uniform flow components.
-%         
-%         if W.inputDomain.uniformStrength == 0 || ...
-%                 W.inputDomain.m <= 1
-%             return
-%         end
-% 
-%         Chi = W.inputDomain.uniformAngle;
-%         h = W.hCenterDiff;
-%         
-%         dbet = [...
-%             W.beta + 0.5*h   % betaR
-%             W.beta - 0.5*h   % betaL
-%             W.beta + 0.5i*h  % betaU
-%             W.beta - 0.5i*h  % betaD
-%         ];
-%         W.dbeta = dbet;
-%         W.G0bxy = cell(2, 2);
-%         
-%         if mod(Chi, pi) > eps(pi)
-%             % Sine term in use. Setup G0bx.
-%             wb1 = skprime(dbet(1), W.wbeta);
-%             wb1c = invParam(wb1);
-%             wb2 = skprime(dbet(2), W.wbeta);
-%             wb2c = invParam(wb2);
-%             W.G0bxy(:,1) = { ...
-%                 @(z) log(wb1(z)./wb1c(z)/abs(dbet(1)))/(2i*pi);
-%                 @(z) log(wb2(z)./wb2c(z)/abs(dbet(2)))/(2i*pi)
-%             };
-%         end
-%         if mod(Chi + pi/2, pi) > eps(pi)
-%             % Cosine term in use. Setup G0by.
-%             wb3 = skprime(dbet(3), W.wbeta);
-%             wb3c = invParam(wb3);
-%             wb4 = skprime(dbet(4), W.wbeta);
-%             wb4c = invParam(wb4);
-%             W.G0bxy(:,2) = { ...
-%                 @(z) log(wb3(z)./wb3c(z)/abs(dbet(3)))/(2i*pi);
-%                 @(z) log(wb4(z)./wb4c(z)/abs(dbet(4)))/(2i*pi)                
-%             };
-%         end
-%     end
 end
 
 end
