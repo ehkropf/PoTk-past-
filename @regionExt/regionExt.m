@@ -77,7 +77,7 @@ methods
                 cmt.bb2z(boundbox(circleRegion(R)))], scale);
         elseif n
             axlim = cmt.plotbox(R.singularities, scale);
-        elseif m
+        elseif R.m
             axlim = plotbox(circleRegion(R), scale);
         else
             axlim = [-1, 1, -1, 1];
@@ -91,7 +91,7 @@ methods
         %  represents the smallest square to containt the circles and the
         %  singularity points.
         
-        if nargin < 2
+        if nargin < 2 || isempty(res)
             res = 200;
         end
         if nargin < 3 || isempty(axlim)
