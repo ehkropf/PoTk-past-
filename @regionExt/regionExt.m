@@ -119,6 +119,38 @@ methods
             end
         end
     end
+    
+    function [Rb, zeta] = regionBdd(R)
+        %Construct bounded domain from exterior domain.
+        %
+        % [Rb, zeta] = regionBdd(R)
+        % Constructs bounded region R from exterior region Re where zeta is
+        % the Mobius transform by which this is done.
+        
+        if ~isa(R, 'regionExt')
+            error(PoTk.ErrorTypeString.InvalidArgument, ...
+                'Expected an exterior region object.')
+        end
+        if R.m < 1
+            error(PoTk.ErrorTypeString.InvalidArgument, ...
+                'Domain must have at least one boundary.')
+        end
+        
+        % Mobius transformation.
+        zeta = mobius(0, R.radii(1), 1, -R.centers(1));
+        Rtmp = zeta(circleRegion(R));
+        Rb = regionBdd(Rtmp.centers(2:end), Rtmp.radii(2:end));
+        
+        % Copy properties.
+        Rb.circulation = R.circulation(2:end);
+        Rb.singularities = zeta(R.singularities);
+        Rb.dipole = zeta(R.dipole);        
+        props = properties(R);
+        props = props(5:end-1);
+        for k = 1:numel(props)
+            Rb.(props{k}) = R.(props{k});
+        end
+    end
 end
 
 methods(Access=protected)
