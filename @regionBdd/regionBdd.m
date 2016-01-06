@@ -1,5 +1,20 @@
 classdef regionBdd < baseRegion
 %regionBdd is the punctured unit disk region.
+%
+% R = regionBdd(dv, qv)
+%   Constructs basic region defined by circle center vector dv and radius
+%   vector qv.
+% R = regionBdd(dv, qv, circulation, singularities, singStrength, ...
+%               uniformStrength, uniformAngle, dipole)
+%   Constructs region by setting given parameters. The circulation vector
+%   should have one more element at the start of the vector than the number
+%   of circle centers (circulation on the unit circle). The singularities
+%   and singStrength vectors must be the same size. The uniform field 
+%   strength and angle are real, finite values. The dipole is the location 
+%   of the uniform field dipole. Any parameter value may be empty per MATLAB
+%   function convention.
+% R = regionBdd(dv, qv, 'parameterName', parameterValue, ...)
+%   This is the name/value pair version of the constructor.
 
 % Everett Kropf, 2015
 % 

@@ -1,5 +1,18 @@
 classdef regionExt < baseRegion
 %regionExt is the region exterior to multiple circles.
+%
+% R = regionExt(dv, qv)
+%   Constructs basic region defined by circle center vector dv and radius
+%   vector qv.
+% R = regionExt(dv, qv, circulation, singularities, singStrength, ...
+%               uniformStrength, uniformAngle, dipole)
+%   Constructs region by setting given parameters. The circulation vector
+%   should have the same number of elements as circle centers given.
+%   The uniform field strength and angle are real, finite values. The dipole
+%   is the location of the uniform field dipole. Any parameter value may be
+%   empty per MATLAB function convention.
+% R = regionExt(dv, qv, 'parameterName', parameterValue, ...)
+%   This is the name/value pair version of the constructor.
 
 % Everett Kropf, 2015
 % 

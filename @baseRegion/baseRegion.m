@@ -1,5 +1,22 @@
 classdef baseRegion
 %baseRegion is PoTk base circle region class.
+%
+% This abstract class is not meant to be instantiated directly.
+%
+% Constructor:
+% R = baseRegion(dv, qv)
+%   Constructs basic region defined by circle center vector dv and radius
+%   vector qv.
+% R = baseRegion(dv, qv, circulation, singularities, singStrength, ...
+%                uniformStrength, uniformAngle, dipole)
+%   Constructs region by setting given parameters. The circulation vector
+%   is bettter defined in the subclass. The singularities and singStrength
+%   vectors must be the same size. The uniform field strength and angle are
+%   real, finite values. The dipole is the location of the uniform field
+%   dipole. Any parameter value may be empty per MATLAB function
+%   convention.
+% R = baseRegion(dv, qv, 'parameterName', parameterValue, ...)
+%   This is the name/value pair version of the constructor.
 
 % Everett Kropf, 2015
 % 
