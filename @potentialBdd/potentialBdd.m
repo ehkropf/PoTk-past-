@@ -192,7 +192,7 @@ methods(Access=protected)
             return
         end
         
-        Chi = W.inputDomain.uniformAngle;
+        Chi = W.theDomain.uniformAngle;
         h = W.hCenterDiff;
         db = beta + 0.5*h*[1, -1, 1i, -1i];
         W.dG0db = cell(4, 1);
