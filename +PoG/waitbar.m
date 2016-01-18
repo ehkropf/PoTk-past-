@@ -1,5 +1,5 @@
-classdef poSubbar < PoG.poBarInterface
-%poSubBar is a sublength of poWaitbar
+classdef waitbar < PoG.barInterface
+%poWaitbar specialises waitbar for PoTk
 
 % Everett Kropf, 2015
 % 
@@ -19,44 +19,50 @@ classdef poSubbar < PoG.poBarInterface
 % along with PoTk.  If not, see <http://www.gnu.org/licenses/>.
 
 properties(SetAccess=protected)
-    current = 0             % Current sublength position in [0,1].
-    length = 0              % Subbar length (0 < length <= remaining).
-    fullbar                 % Full waitbar object.
+    current = 0             % Current position.
+    wHandle                 % Waitbar handle.
 end
 
 methods
-    function b = poSubbar(wbar, len)
+    function b = poWaitbar(name, msg)
         if ~nargin
             return
         end
         
-        if ~isa(wbar, 'PoG.poWaitbar')
-            error(PoTk.ErrorTypeString.InvalidArgument, ...
-                'Expected a `poWaitbar` object.')
+        if nargin < 2
+            msg = '';
         end
+        b.wHandle = waitbar(0, msg, 'name', name);
+    end
+    
+    function tf = goodBar(b)
+        %goodBar returns true if the handle is good.
         
-        remain = 1 - wbar.current;
-        if len > remain
-            len = 1;
-        end
-        b.length = len;
+        tf = ~isempty(b.wHandle) & ishghandle(b.wHandle);
     end
     
     function update(b, x, msg)
-        %Update the sub-interval.
+        %Update waitbar with x and optional msg.
+        
+        if ~goodBar
+            return
+        end
         
         if nargin < 3
             msg = [];
         end
+        waitbar(x, b.wHandle, msg)
         b.current = x;
-        x = b.fullbar.current + x/b.length;
-        update(b.fullbar, x, msg)
     end
     
     function release(b)
-    	%Calls the release method from the actual waitbar.
+        %Closes waitbar via handle delete.
         
-        release(b.fullbar)
+        if ~goodBar(b)
+            return
+        end
+        delete(b.wHandle)
+        b.wHandle = [];
     end
 end
 

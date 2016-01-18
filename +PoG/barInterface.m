@@ -1,4 +1,4 @@
-classdef poBarInterface < handle
+classdef barInterface < handle
 %poBarInterface abstract class defines waitbar interface.
 
 % Everett Kropf, 2016

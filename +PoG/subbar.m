@@ -1,5 +1,5 @@
-classdef poWaitbar < PoG.poBarInterface
-%poWaitbar specialises waitbar for PoTk
+classdef subbar < PoG.barInterface
+%poSubBar is a sublength of poWaitbar
 
 % Everett Kropf, 2015
 % 
@@ -19,50 +19,44 @@ classdef poWaitbar < PoG.poBarInterface
 % along with PoTk.  If not, see <http://www.gnu.org/licenses/>.
 
 properties(SetAccess=protected)
-    current = 0             % Current position.
-    wHandle                 % Waitbar handle.
+    current = 0             % Current sublength position in [0,1].
+    length = 0              % Subbar length (0 < length <= remaining).
+    fullbar                 % Full waitbar object.
 end
 
 methods
-    function b = poWaitbar(name, msg)
+    function b = poSubbar(wbar, len)
         if ~nargin
             return
         end
         
-        if nargin < 2
-            msg = '';
+        if ~isa(wbar, 'PoG.poWaitbar')
+            error(PoTk.ErrorTypeString.InvalidArgument, ...
+                'Expected a `poWaitbar` object.')
         end
-        b.wHandle = waitbar(0, msg, 'name', name);
-    end
-    
-    function tf = goodBar(b)
-        %goodBar returns true if the handle is good.
         
-        tf = ~isempty(b.wHandle) & ishghandle(b.wHandle);
+        remain = 1 - wbar.current;
+        if len > remain
+            len = 1;
+        end
+        b.length = len;
     end
     
     function update(b, x, msg)
-        %Update waitbar with x and optional msg.
-        
-        if ~goodBar
-            return
-        end
+        %Update the sub-interval.
         
         if nargin < 3
             msg = [];
         end
-        waitbar(x, b.wHandle, msg)
         b.current = x;
+        x = b.fullbar.current + x/b.length;
+        update(b.fullbar, x, msg)
     end
     
     function release(b)
-        %Closes waitbar via handle delete.
+    	%Calls the release method from the actual waitbar.
         
-        if ~goodBar(b)
-            return
-        end
-        delete(b.wHandle)
-        b.wHandle = [];
+        release(b.fullbar)
     end
 end
 
