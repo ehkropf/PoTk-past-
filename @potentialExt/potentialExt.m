@@ -95,6 +95,7 @@ methods(Access=protected)
     %%%%% Construction.
     function W = constructPotential(W)
         
+        W = waitbarInitialize(W, 'Configuring potential functions');
         W = setupBoundedRegion(W);
         W = setupBoundedPotential(W);
         W = setupGreensFunction(W);
@@ -103,6 +104,7 @@ methods(Access=protected)
     function W = setupBoundedRegion(W)
         % Mobius transform of exterior domain.
         
+        waitbarUpdate(W, 0, 'Equivalent bounded domain')
         if W.theDomain.m > 0
             [Db, zeta] = regionBdd(W.theDomain);
             
@@ -118,12 +120,18 @@ methods(Access=protected)
     function W = setupBoundedPotential(W)
         % Get the bounded potential.
         
-        W.bddPotential = potentialBdd(W.bddDomain);
+        if W.useWaitBar
+            W.bddPotential = potentialBdd(W.bddDomain, ...
+                PoG.subbar(W.awaitbar, 3/5));
+        else
+            W.bddPotential = potentialBdd(W.bddDomain);
+        end
     end
     
     function W = setupGreensFunction(W)
         % Now for the Green's function.
         
+        waitbarUpdate(W, 4/5, 'Singularity at infinity')
         if W.theDomain.m > 1
             W.greensBeta = greensC0(W.beta, skpDomain(W.bddDomain));
         end

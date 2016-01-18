@@ -38,6 +38,13 @@ end
 
 methods
     function W = potentialBdd(theDomain, varargin)
+        abar = [];
+        if numel(varargin) > 0 ...
+                && isa(varargin{1}, 'PoG.barInterface')
+            abar = varargin{1};
+            varargin = varargin(2:end);
+        end
+        
         W = W@complexPotential(varargin{:});
         if ~nargin
             return
@@ -48,6 +55,11 @@ methods
                 'Expected a "regionBdd" object.')
         end
         W.theDomain = theDomain;
+        
+        if abar
+            W.useWaitbar = true;
+            W.awaitbar = abar;
+        end
         
         W = constructPotential(W);
     end
@@ -139,7 +151,7 @@ methods(Access=protected)
     function W = constructPotential(W)
         % Call all the setup methods. In the proper order.
         
-        W = waitbarInitialize(W, 'Configuring boundary functions');
+        W = waitbarInitialize(W, 'Configuring potential functions');
         W = setupBdryCirc(W);
         W = setupVortexCirc(W);
         W = setupUniformFlow(W);
@@ -156,6 +168,7 @@ methods(Access=protected)
         dv = W.theDomain.centers;
         qv = W.theDomain.radii;
         
+        waitbarUpdate(W, 0, sprintf('Boundary part (1/%d)', m))
         W.vjfuns{1} = vjFirstKind(1, skpDomain(dv, qv));
         for j = 2:m
             waitbarUpdate(W, (j-1)/m/3, ...
