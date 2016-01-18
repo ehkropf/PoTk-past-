@@ -25,7 +25,7 @@ properties(SetAccess=protected)
 end
 
 methods
-    function b = poSubbar(wbar, len)
+    function b = subbar(wbar, len)
         if ~nargin
             return
         end

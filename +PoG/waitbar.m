@@ -24,7 +24,7 @@ properties(SetAccess=protected)
 end
 
 methods
-    function b = poWaitbar(name, msg)
+    function b = waitbar(name, msg)
         if ~nargin
             return
         end
