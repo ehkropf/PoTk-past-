@@ -399,7 +399,7 @@ methods(Access=protected)
         if ~isempty(W.awaitbar) && isa(W.awaitbar, 'PoG.barInterface')
             update(W.awaitbar, 0, msg);
         else
-            W.awaitbar = PoG.waitbar(0, name, msg);
+            W.awaitbar = PoG.waitbar(name, msg);
         end
     end
     
