@@ -54,10 +54,8 @@ methods
         update(b.fullbar, x, msg)
     end
     
-    function release(b)
-    	%Calls the release method from the actual waitbar.
-        
-        release(b.fullbar)
+    function release(~)
+    	%Required by interface. Do nothing
     end
 end
 
