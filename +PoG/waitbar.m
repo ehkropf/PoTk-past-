@@ -44,7 +44,7 @@ methods
     function update(b, x, msg)
         %Update waitbar with x and optional msg.
         
-        if ~goodBar
+        if ~goodBar(b)
             return
         end
         
