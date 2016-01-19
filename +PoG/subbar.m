@@ -30,11 +30,12 @@ methods
             return
         end
         
-        if ~isa(wbar, 'PoG.poWaitbar')
+        if ~isa(wbar, 'PoG.barInterface')
             error(PoTk.ErrorTypeString.InvalidArgument, ...
                 'Expected a `poWaitbar` object.')
         end
         
+        b.fullbar = wbar;
         remain = 1 - wbar.current;
         if len > remain
             len = 1;
