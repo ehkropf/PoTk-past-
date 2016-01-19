@@ -56,8 +56,8 @@ methods
         end
         W.theDomain = theDomain;
         
-        if abar
-            W.useWaitbar = true;
+        if ~isempty(abar)
+            W.useWaitBar = true;
             W.awaitbar = abar;
         end
         
