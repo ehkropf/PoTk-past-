@@ -75,7 +75,7 @@ methods
         xylim = scale*[-1, 1, -1, 1];
     end
     
-    function [zg, axlim] = rectGrid(R, res, vpad)
+    function [zg, axlim] = rectGrid(R, res, ~, vpad)
         %[zg, axlim] = rectGrid(R, res, vpad)
         %  Square point grid.
         

@@ -145,7 +145,7 @@ methods
         axscale = max(diff(axlim(1:2)), diff(axlim(3:4)));
         
         % Calculate.        
-        zs = flowSamplePoints(W.theDomain, ...
+        zs = rectGrid(W.theDomain, ...
             W.numPlotPts, axlim, 0.005*axscale);
         Wz = feval(W, zs);
         
@@ -160,7 +160,7 @@ methods
         plot(W.theDomain)
         
         if ~washold
-            numberIslandsAndVortices(W.theDomain)
+            numberBoundaries(W.theDomain)
             axis(axlim)
             aspectequal
             hold off
