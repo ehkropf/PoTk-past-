@@ -39,6 +39,7 @@ properties(SetAccess=protected)
 end
 
 properties(Access=protected)
+    defaultPlotScale = 1.5
 end
 
 methods

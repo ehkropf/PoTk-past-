@@ -37,6 +37,7 @@ properties(SetAccess=protected)
 end
 
 properties(Abstract,Access=protected)
+    defaultPlotScale        % Default scale for plotboxes.
 end
 
 properties(Access=protected)
@@ -137,7 +138,7 @@ methods
             cah = newplot;
             axis off
             cmtplot.whitefigure(cah)
-            axlim = plotbox(W.theDomain, 1.5);
+            axlim = plotbox(W.theDomain, W.defaultPlotScale);
             hold on
         else
             axlim = axis;

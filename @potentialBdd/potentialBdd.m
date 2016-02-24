@@ -36,6 +36,10 @@ properties(SetAccess=protected)
     dG0db = {}              % Green's derivatives wrt parameter.
 end
 
+properties(Access=protected)
+    defaultPlotScale = 1
+end
+
 methods
     function W = potentialBdd(theDomain, varargin)
         abar = [];
