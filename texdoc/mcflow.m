@@ -28,7 +28,7 @@ vectorColor = [0.929, 0.694, 0.125];
 
 
 %%
-% Some bounded flow. Pick some circles and some points.
+% Some bounded flow. Pick some circles and some points. Set circulations.
 
 dv = [
     -0.25524+0.38986i
@@ -38,3 +38,16 @@ qv = [
     0.12362
     0.15385
     0.12607];
+gv = [-2; 1; -1];
+
+av = [
+    -0.49329-0.11195i
+    0.31137+0.34985i
+    0.19242-0.65073i
+    -0.19242+0.70671i];
+Gv = [1; -1; 2; -1];
+
+D = regionBdd(dv, qv, gv, av, Gv);
+W = potential(D);
+
+plot(W)
