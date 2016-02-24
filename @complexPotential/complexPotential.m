@@ -47,8 +47,8 @@ properties(Access=protected)
                             % one dimension.
     numPlotPts = 200        % (p) sqrt(#) of points to use for plotting 
                             % stream lines.
-    numVectorPts = 20;      % (p) sqrt(#) of points for vortex refinement.
-    awaitbar                % Waitbar object.
+    numVectorPts = 20       % (p) sqrt(#) of points for vortex refinement.
+    awaitbar                % Waitbar object.    
 end
 
 properties(Access=private)
