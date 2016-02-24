@@ -207,21 +207,20 @@ vzv(outvec) = dWdz(zv(outvec));
 
 \section{Multiply connected domains}
 Let $D_\zeta$ be the unit disk with $m$ disconnected circular holes. We let the pairs $\{\delta_j,q_j\}_{j=1}^m$ represent the centres and radii of these holes. For indices $j=\{0,1,\dots,m\}$ we denote the $j$th boundary circle of $\partial D_\zeta$ by $C_j$, where $C_0$ is the unit circle.
-
-There are actually two cases to consider. The bounded domain and the unbounded domain. We first consider the former.
-
-\subsection{Unbounded flow region}
-If $C_j$ is the $j$th circle boundary inside $D_\zeta$, then let $C_j'$ be its reflection through the unit circle. It can be shown the M\"obius transformation
+Let $C_j'$ be the reflection of circle $C_j$ through the unit circle. It can be shown the M\"obius transformation
 \begin{equation*}
   \theta_j(\zeta) = \delta_j + \frac{q_j^2 \zeta}{1 - \conj{\delta_j}\zeta}
 \end{equation*}
 maps points on the outer circle $C_j'$ to points on the inner circle $C_j$.
-Let this sentence stand in as the definition of the first kind integrals $v_j(\zeta)$.
+Let this sentence stand in as the definition of the first kind integrals $v_j(\zeta)$. Let this sentence stand in as the introduction to the Schottky-Klein prime function.
 For more on this and information on computing the Schottky-Klein prime function $\omega$, see \cite{primecalc}.
 
+For flow in multiply connected domains, there are actually two cases to consider. The bounded domain and the unbounded domain. We first consider the former.
+
+\subsection{Bounded flow region}
 From \cite{greensfunctions} we note the $m+1$ functions, for $\alpha$ and $\zeta$ in $D_\zeta$,
 \begin{equation}
-  G_j(\zeta,\alpha) = \frac{1}{2\pi\i} \log \left[ \frac{q_j}{|\alpha - \delta_j|} \frac{\omega(\zeta,\alpha)}{\omega(\zeta,\uconj{\alpha})} \right]
+  G_j(\zeta,\alpha) = \frac{1}{2\pi\i} \log \left[ \frac{q_j}{|\alpha - \delta_j|} \frac{\omega(\zeta,\alpha)}{\omega(\zeta,\theta_j(\uconj{\alpha}))} \right]
   \label{eq:greensfunction}
 \end{equation}
 have the following properties: The function $G_j$ is the complex potentential such that
@@ -233,35 +232,18 @@ In the special case when $j=0$ and $\alpha=0$ we note the Green's function takes
 \begin{equation*}
   G_0(\zeta,0) = \frac{1}{2\pi\i} \log\left[ \frac{\omega(\zeta,0)}{\omega(\zeta,\infty)} \right].
 \end{equation*}
-It will be beneficial in the subsequent to note we never need to compute $G_j$ directly, since by a lemma in \cite{primecalc} we have
-\begin{equation*}
+It will be beneficial in the subsequent to note we never need to compute $G_j$ for $j>1$ directly, since by a Lemma in \cite{primecalc} we have
+\begin{equation}
   G_j(\zeta,\alpha) = G_0(\zeta,\alpha) - v_j(\zeta) + K_j(\alpha)
-\end{equation*}
+  \label{eq:greens_identity}
+\end{equation}
 where
 \begin{equation*}
   K_j(\alpha) = \conj{v_j(\alpha)} + \tfrac{1}{2}\tau_{jj} + \frac{1}{2\pi}\arg\left[ \frac{\alpha}{\alpha - \delta_j} \right]
 \end{equation*}
 is a constant dependent solely on $\alpha$. Since complex potential is determined up to a constant, we ignore it in computation.
 
-Let $\Omega$ be an $m+1$ connected unbounded domain where all of the component boundaries are circles. Then there is a M\"obius transformation $\zeta(z)$ with the mapping $\Omega\mapsto D_\zeta$. We denote the $j$th circle of $\partial\Omega$ by $R_j$, and the map $\zeta(z)$ associates $R_j$ with $C_j$. Let the points $\{\alpha_k\}_{k=1}^n$ be images under $\zeta$ of the $n$ point vortices of strength $\Gamma_k$ located in $\Omega$, and we will allow for circulation around the boundaries of $\Omega$ with strengths given by $\{\gamma_j\}_{j=0}^m$. And finally, define the point $\beta = \zeta(\infty)$. Following \cite{newcalculus}, we may now write down that background flow is given by
-\begin{equation}
-  W_U(\zeta) = -4\pi U\left. \left( \frac{\partial G_0(\zeta,\alpha)}{\partial \alpha_y}\cos\chi + \frac{\partial G_0(\zeta,\alpha)}{\partial \alpha_x}\sin\chi \right) \right|_{\alpha = \beta}
-  \label{eq:backgroudmc}
-\end{equation}
-where we have used that $\alpha = \alpha_x + \i\alpha_y$. Also from \cite{newcalculus}, we may write down the flow due to $n$ point vortices being determined by
-\begin{equation}
-  \begin{split}
-    W_\Gamma(\zeta) &= \sum_{k=1}^n \Gamma_k \left[ G_0(\zeta,\alpha_k) - G_0(\zeta,\beta) \right] - \sum_{j=0}^m \gamma_j G_j(\zeta,\beta) \\
-    &= \sum_{k=1}^n \Gamma_k G_0(\zeta,\alpha_k) - \left[ \sum_{k=1}^n \Gamma_k + \sum_{j=0}^m \gamma_j \right] G_0(\zeta,\beta) + \sum_{j=1}^m \gamma_j v_j(\zeta).
-  \end{split}
-  \label{eq:vorticesmc}
-\end{equation}
-The combined flow is written as above by simply $W(\zeta) = W_U(\zeta) + W_\Gamma(\zeta)$.
-
-\subsection{Bounded flow region}
-``Background'' flow in the bounded domain is represented by a point dipole $\beta\in D_\zeta$ acting as a source and sink. In fact if $D_\zeta$ is the image of some domain $\Omega$ under $\zeta(\zeta)$, then $\beta$ is the image of the point at infinity, and this point takes on the same role.
-
-In equation~\eqref{eq:vorticesmc}, it should be clear that all of the unwanted boundary circulation on $R_0$ (and by association $C_0$), given by the $G_0(\zeta,\alpha_k)$ functions, was moved to the point at infinity by the term $-G_0(\zeta,\beta)$. In the bounded flow case, we could choose to have the point $\beta$ take this same role, but by convention we move all of the unwanted boundary circulation to the boundary $C_0$. This is done by writing
+The flow due to $n$ point vortices at locations $\{\alpha_k:1\le k\le n\}$ with strengths denoted by scalars $\Gamma_k$ may, based on the properties discussed above, simply be given by a sum of the terms $\Gamma_k G_0(\zeta,\alpha_k)$. This immediately places a circulation of $-\sum_{k=1}^n \Gamma_k$ on boundary $C_0$, but we will ignore this momentarily. To apply a circulation to the boundaries $\{C_j:0<j\le m\}$, we pick any point $\beta\in D_\zeta$ and use the linear combination $-\sum_{j=1}^m \gamma_j G_j(\zeta,\beta)$, where $\gamma_j$ is the strength of the circulation. This of course puts a possibly unwanted circulation of $-\sum \gamma_j$ at the point $\beta$, but we may move this unwanted flow to $C_0$ by an associated linear combination of the $G_0$ functions. In fact we have now placed all of our incidental circulation at the boundary $C_0$, but this is common in flow problems, and it is easy to move this flow to another boundary or point as desired by the appropriate combination of Green's functions. Our expression for flow due to circulation is then given by
 \begin{equation}
   \begin{split}
     W_\Gamma(\zeta) &= \sum_{k=1}^n \Gamma_k G_0(\zeta,\alpha_k) + \sum_{j=1}^m \gamma_j \left[ G_0(\zeta,\beta) - G_j(\zeta,\beta) \right] \\
@@ -269,6 +251,31 @@ In equation~\eqref{eq:vorticesmc}, it should be clear that all of the unwanted b
   \end{split}
   \label{eq:bvorticesmc}
 \end{equation}
+Note the final form of the function does not involve the point $\beta$ or, by application of equation~\eqref{eq:greens_identity}, any of the functions $\{G_j:0<j\le m\}$.
+
+A uniform field, or background flow, in the bounded domain is represented by a point dipole located at some $\beta\in D_\zeta$ acting as a source and sink.
+Following \cite{newcalculus}, we may write down that this flow is given by
+\begin{equation}
+  W_U(\zeta) = -4\pi U\left. \left( \frac{\partial G_0(\zeta,\alpha)}{\partial \alpha_y}\cos\chi + \frac{\partial G_0(\zeta,\alpha)}{\partial \alpha_x}\sin\chi \right) \right|_{\alpha = \beta}
+  \label{eq:backgroudmc}
+\end{equation}
+where we have used that $\alpha = \alpha_x + \i\alpha_y$.
+Finally, the combined flow is written as above by simply $W(\zeta) = W_U(\zeta) + W_\Gamma(\zeta)$.
+
+\subsection{Unbounded flow region}
+Let $\Omega$ be an $m+1$ connected unbounded domain where all of the component boundaries are circles. Then there is a M\"obius transformation $\zeta(z)$ with the mapping $\Omega\mapsto D_\zeta$. We denote the $j$th circle of $\partial\Omega$ by $R_j$, and the map $\zeta(z)$ associates $R_j$ with $C_j$. Let the points $\{\alpha_k:1\le k\le n\}$ be images under $\zeta$ of the $n$ point vortices of strength $\Gamma_k$ located in $\Omega$, and we will allow for circulation around the boundaries of $\Omega$ with strengths given by $\{\gamma_j:0\le j\le m\}$. And finally, define the point $\beta = \zeta(\infty)$.
+
+Unlike the bounded case, we want to be able to specify the flow around all of the boundaries, but we also have the freedom of the point at infinity, which we did not previously have. Proceding as in the bounded case, but now moving all of the unwanted circulation to the point at infinity, we write the potential due to circulation is given by
+\begin{equation}
+  \begin{split}
+    W_\Gamma(\zeta) &= \sum_{k=1}^n \Gamma_k \left[ G_0(\zeta,\alpha_k) - G_0(\zeta,\beta) \right] - \sum_{j=0}^m \gamma_j G_j(\zeta,\beta) \\
+    &= \sum_{k=1}^n \Gamma_k G_0(\zeta,\alpha_k) + \sum_{j=1}^m \gamma_j v_j(\zeta) - \left[ \sum_{k=1}^n \Gamma_k + \sum_{j=0}^m \gamma_j \right] G_0(\zeta,\beta).
+  \end{split}
+  \label{eq:vorticesmc}
+\end{equation}
+The relationship between equation~\eqref{eq:vorticesmc} and equation~\eqref{eq:bvorticesmc} is exploited in the architecture of PoTk, and the bounded domain flow is always computed as a starting point.
+
+The background flow in the unbounded case is given by treating the point at infinity as a dipole. Since this is associated with the point $\beta\in D_\zeta$, the same expression for $W_U$ is used here as in the bounded case. The combined flow is again $W_U + W_\Gamma$.
 
 %%fakesection References
 \bibliographystyle{abbrv}
