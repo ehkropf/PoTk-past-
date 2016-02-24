@@ -71,10 +71,11 @@ aspectequal = @(ax) set(ax, 'dataaspectratio', [1, 1, 1]);
 streamColor = [0, 0.447, 0.741];
 vectorColor = [0.929, 0.694, 0.125];
 \end{lstlisting}
+See also the set of ancillary functions given in Appendix~\ref{sec:utility}.
 
 \section{Basic potential flow}
 \subsection{Uniform flow}
-The vector components of uniform flow at speed $U$ in the plane at an angle $\chi$ with respect ot he real axis are given by
+The vector components of uniform flow at speed $U$ in the plane at an angle $\chi$ with respect to the real axis are given by
 \[ u = U\cos\chi \quad\text{and}\quad v = U\sin \chi, \]
 from which we get
 \begin{equation*}
@@ -135,6 +136,8 @@ vzv(outv) = dWdz(zv(outv));
 quiver(real(zv), imag(zv), real(vzv), imag(vzv), 'color', vectorColor)
 hold on
 contour(real(z), imag(z), imag(Wz), 20, 'lineColor', streamColor)
+fill(circle(0, 1))
+plot(circle(0, 1))
 \end{lstlisting}
 \begin{figure}[htb]
   \centering
@@ -166,7 +169,7 @@ plot(circle(0, 1))
 \end{lstlisting}
 Is it possible to compute the stagnation points?
 
-We can force, by a specific value of $\Gamma$, to have the stagnation point at the bottom of the unit disk, $e^{\i 3\pi/2}$:
+We can force, by a specific value of $\Gamma$, to have the stagnation point at the bottom of the unit disk, $e^{\i 3\pi/2}$ (from here forward we will not print the plotting commands, unless something new is added):
 \begin{lstlisting}
 Gamma = -4*pi;
 dWdz = centdiffz(@(z) W(z, U, Gamma));
@@ -285,7 +288,7 @@ The background flow in the unbounded case is given by treating the point at infi
 \clearpage
 \appendix
 
-\section{Utility functions}
+\section{Utility functions}\label{sec:utility}
 \paragraph{Rectangular grid}
 This function returns points in a rectangular grid.
 \begin{lstlisting}
