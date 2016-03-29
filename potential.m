@@ -33,6 +33,7 @@ switch class(region)
         pobj = potentialExt(region, varargin{:});
         
     otherwise
-        args = [region, varargin];
-        pobj = builtin('potential', args{:});
+        error(PoTk.ErrorTypeString.RuntimeError, ...
+            'Unrecognized region type ''%s'' for potential.', ...
+            class(region))
 end
