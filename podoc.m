@@ -29,7 +29,7 @@ end
 
 currDir = pwd;
 potkDir = fileparts(which(mfilename));
-if ~strcmp(potkDir, fileparts(which('flowRegion')))
+if ~strcmp(potkDir, fileparts(which('potool')))
     error('PoTk:runtimeError', 'Unable to locate PoTk document directory.')
 end
 cd([potkDir, '/doc'])
