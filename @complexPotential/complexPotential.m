@@ -49,10 +49,10 @@ properties(Access=protected)
     numPlotPts = 200        % (p) sqrt(#) of points to use for plotting 
                             % stream lines.
     numVectorPts = 20       % (p) sqrt(#) of points for vortex refinement.
-    awaitbar                % Waitbar object.    
+    waitBar                 % Waitbar object.    
 end
 
-properties(Access=private)
+properties(SetAccess=private,GetAccess=protected)
     varPropList = {'useWaitBar', 'streamWithField'}
 end
 
@@ -397,25 +397,26 @@ methods(Access=protected)
             msg = '';
         end
         
-        if ~isempty(W.awaitbar) && isa(W.awaitbar, 'PoG.barInterface')
-            update(W.awaitbar, 0, msg);
+        if ~isempty(W.waitBar) && isa(W.waitBar, 'PoG.subbar')
+            update(W.waitBar, 0, msg);
         else
-            W.awaitbar = PoG.waitbar(name, msg);
+            W.waitBar = PoG.waitbar(name, msg);
         end
     end
     
     function waitbarUpdate(W, x, msg)
-        if ~W.useWaitBar || isempty(W.awaitbar)
+        if ~W.useWaitBar || isempty(W.waitBar)
             return
         end
-        update(W.awaitbar, x, msg)
+        update(W.waitBar, x, msg)
     end
     
     function W = waitbarRelease(W)
-        if ~W.useWaitBar || isempty(W.awaitbar)
+        if ~W.useWaitBar || isempty(W.waitBar)
             return
         end
-        release(W.awaitbar)
+        release(W.waitBar)
+        W.waitBar = [];
         drawnow
     end
     

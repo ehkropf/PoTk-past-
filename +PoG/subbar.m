@@ -21,6 +21,7 @@ classdef subbar < PoG.barInterface
 properties(SetAccess=protected)
     current = 0             % Current sublength position in [0,1].
     length = 0              % Subbar length (0 < length <= remaining).
+    origin = 0              % Parent bar starting position.
     fullbar                 % Full waitbar object.
 end
 
@@ -30,16 +31,13 @@ methods
             return
         end
         
-        if ~isa(wbar, 'PoG.barInterface')
+        if ~isa(wbar, 'PoG.waitbar')
             error(PoTk.ErrorTypeString.InvalidArgument, ...
-                'Expected a `poWaitbar` object.')
+                'Expected a `PoG.waitbar` object.')
         end
         
         b.fullbar = wbar;
-        remain = 1 - wbar.current;
-        if len > remain
-            len = 1;
-        end
+        b.origin = wbar.current;
         b.length = len;
     end
     
@@ -50,7 +48,7 @@ methods
             msg = [];
         end
         b.current = x;
-        x = b.fullbar.current + x/b.length;
+        x = b.origin + x*b.length;
         update(b.fullbar, x, msg)
     end
     

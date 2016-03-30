@@ -100,6 +100,7 @@ methods(Access=protected)
         W = setupBoundedRegion(W);
         W = setupBoundedPotential(W);
         W = setupGreensFunction(W);
+        W = waitbarRelease(W);
     end
     
     function W = setupBoundedRegion(W)
@@ -121,12 +122,17 @@ methods(Access=protected)
     function W = setupBoundedPotential(W)
         % Get the bounded potential.
         
-        if W.useWaitBar
-            W.bddPotential = potentialBdd(W.bddDomain, ...
-                PoG.subbar(W.awaitbar, 3/5));
-        else
-            W.bddPotential = potentialBdd(W.bddDomain);
+        waitbarUpdate(W, 1/5, 'Prime domain potential')
+        nv = numel(W.varPropList);
+        args = cell(1, 2*nv);
+        for i = 1:nv
+            var = W.varPropList{i};
+            args(2*i-[1,0]) = {var, W.(var)};
         end
+        if W.useWaitBar
+            args = [{PoG.subbar(W.waitBar, 3/5)}, args];
+        end
+        W.bddPotential = potentialBdd(W.bddDomain, args{:});
     end
     
     function W = setupGreensFunction(W)

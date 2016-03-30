@@ -42,10 +42,10 @@ end
 
 methods
     function W = potentialBdd(theDomain, varargin)
-        abar = [];
+        subbar = [];
         if numel(varargin) > 0 ...
-                && isa(varargin{1}, 'PoG.barInterface')
-            abar = varargin{1};
+                && isa(varargin{1}, 'PoG.subbar')
+            subbar = varargin{1};
             varargin = varargin(2:end);
         end
         
@@ -60,9 +60,9 @@ methods
         end
         W.theDomain = theDomain;
         
-        if ~isempty(abar)
+        if ~isempty(subbar)
             W.useWaitBar = true;
-            W.awaitbar = abar;
+            W.waitBar = subbar;
         end
         
         W = constructPotential(W);
