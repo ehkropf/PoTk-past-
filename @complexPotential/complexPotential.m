@@ -190,7 +190,7 @@ methods
         ypad = 0.01*diff(axlim([3,4]));
         vlim = [axlim(1)+xpad, axlim(2)-xpad, axlim(3)+ypad, axlim(4)-ypad];
         vscale = max(diff(vlim(1:2)), diff(vlim(3:4)));
-        zs = flowSamplePoints(W.theDomain, W.numVectorPts, ...
+        zs = rectGrid(W.theDomain, W.numVectorPts, ...
             vlim, 0.03*vscale);
         zs = zs(~isnan(zs));
         V = velocityField(W, zs);
