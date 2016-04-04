@@ -206,6 +206,8 @@ methods(Abstract)
     C = circleRegion(R)         % Convert to CMT circle region.
     numberBoundaries(R)         % Helper function for numberFeatures().
     xylim = plotbox(R, scale)   % Axis limits for plotting.
+    [grid, axlim] = rectGrid(R, res, axlim, vpad)
+                                % Rectangular point grid.
 end
 
 methods(Access=protected)
