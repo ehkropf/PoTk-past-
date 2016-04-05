@@ -159,7 +159,7 @@ methods
         plot(W.theDomain)
         
         if ~washold
-            numberBoundaries(W.theDomain)
+            numberFeatures(W.theDomain)
             axis(axlim)
             aspectequal
             hold off
@@ -178,7 +178,7 @@ methods
         washold = ishold;
         if ~washold
             cmtplot.whitefigure(cah)
-            axlim = plotbox(W.theDomain, 1.5);
+            axlim = plotbox(W.theDomain, W.defaultPlotScale);
             axis(axlim)
         else
             axlim = axis;
@@ -200,7 +200,7 @@ methods
             varargin = varargin(2:end);
         end
         if W.streamWithField && doStreamLines
-            plot(W)
+            plotStreamLines(W)
         else
             plot(W.theDomain)
         end
@@ -208,7 +208,7 @@ methods
             'color', [0.078, 0.169, 0.549], varargin{:})
         
         if ~washold
-            numberIslandsAndVortices(W.theDomain)
+            numberFeatures(W.theDomain)
             aspectequal
             axis off
             hold off
