@@ -33,7 +33,7 @@ classdef potentialExt < complexPotential
 properties(SetAccess=protected)
     bddDomain               % (r/o) Bounded domain.
     bddPotential            % (r/o) Bounded potential.
-    zetaf                   % (r/o) Mobius transform unbounded -> bounded.
+    zetaFun                 % (r/o) Mobius transform unbounded -> bounded.
     beta = inf              % (r/o) Image of infinity in bounded domain.
     greensBeta              % (r/o) Green's function wrt C0 at beta.
 end
@@ -70,7 +70,7 @@ methods(Access=protected)
     function w = calcPotential(W, z)
         % Combine with internal calculation.
         
-        zeta = W.zetaf(z);
+        zeta = W.zetaFun(z);
         w = calcBounded(W, zeta);
         w = w - calcExternalPart(W, zeta);
     end
@@ -111,11 +111,11 @@ methods(Access=protected)
             [Db, zeta] = regionBdd(W.theDomain);
             
             W.beta = pole(inv(zeta));
-            W.zetaf = zeta;
+            W.zetaFun = zeta;
             W.bddDomain = Db;
         else
             % No equivalent bounded domain.
-            W.zetaf = mobius(1, 0, 0, 1);
+            W.zetaFun = mobius(1, 0, 0, 1);
         end
     end
     
