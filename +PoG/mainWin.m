@@ -103,7 +103,7 @@ methods
             if nargin > 1
                 if ~isa(adomain, 'regionExt')
                     error(PoTk.ErrorTypeString.InvalidArgument, ...
-                        ['Expected an exterior region object, '
+                        ['Expected an exterior region object, ' ...
                         'got a "%s" instead.'], class(adomain))
                 end
                 readPhysicalDomain(pg, adomain)
