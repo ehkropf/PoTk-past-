@@ -71,8 +71,12 @@ end
 
 methods(Access=protected)
     %%%%% Calculation.
-    function w = calcPotential(W, zeta)
+    function w = calcPotential(W, zeta, subbar)
         % Combine potential flows.
+        
+        if nargin > 2 && isa(subbar, 'PoG.subbar')
+            W.waitBar = subbar;
+        end
         
         W = waitbarInitialize(W, 'Computing potential values');
         w = calcBdryCirc(W, zeta);

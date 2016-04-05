@@ -70,20 +70,29 @@ methods(Access=protected)
     function w = calcPotential(W, z)
         % Combine with internal calculation.
         
+        W = waitbarInitialize(W, 'Computing potential values');
         zeta = W.zetaFun(z);
         w = calcBounded(W, zeta);
         w = w - calcExternalPart(W, zeta);
+        waitbarRelease(W);
     end
     
     function w = calcBounded(W, zeta)
         % Bounded potential part.
         
-        w = W.bddPotential(zeta);
+        if W.useWaitBar
+            subbar = PoG.subbar(W.waitBar, 3/4);
+            w = calcPotential(W.bddPotential, zeta, subbar);
+        else
+            W.bddPotential.useWaitBar = W.useWaitBar;
+            w = W.bddPotential(zeta);
+        end
     end
     
     function w = calcExternalPart(W, zeta)
         % Calculate extra part for external flow.
         
+        waitbarUpdate(W, 3/4, 'Externalizing flow')
         extSums = sum(W.theDomain.singStrength) ...
             + sum(W.theDomain.circulation);
         if extSums == 0
