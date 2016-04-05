@@ -41,8 +41,6 @@ properties(Abstract,Access=protected)
 end
 
 properties(Access=protected)
-    zetaFun                 % (p) Map from input to prime domain.
-
     hCenterDiff = 1e-3      % (p) Centred difference h value.
     numSamplePts = 75       % (p) sqrt(#) of sample points for stream lines in
                             % one dimension.
