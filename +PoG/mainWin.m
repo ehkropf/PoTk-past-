@@ -24,7 +24,7 @@ properties(SetAccess=protected)
     vortices
     strength
     potentialObject
-    flowStrength = 1
+    flowStrength = 0.1
     flowAngle = 0
 end % Domain settings
 
