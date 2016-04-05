@@ -60,7 +60,7 @@ methods
     function numberBoundaries(R)
         for j = 1:R.m+1
             c = R.centers(j);
-            text(real(c), imag(c), num2str(j-1))
+            text(real(c), imag(c), num2str(j))
         end
     end
         
